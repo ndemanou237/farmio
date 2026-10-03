@@ -1,9 +1,67 @@
 {% extends "common/base.html" %}
 {% load i18n %}
+
 {% block title %}{% trans "À propos" %} — Farmio{% endblock %}
-{% block content %}
-<div class="max-w-2xl mx-auto px-4 py-16">
-  <h1 class="text-2xl font-bold mb-4">{% trans "À propos de Farmio" %}</h1>
-  <p class="text-gray-500">{% trans "Contenu à venir." %}</p>
-</div>
+
+{% block common_content %}
+<section class="bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12),_transparent_38%),linear-gradient(180deg,#f7faf6_0%,#eefaf4_100%)] py-16 lg:py-20">
+  <div class="container-shell">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="section-label">Farmio</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">{% trans "Une plateforme pensée pour le commerce agricole durable." %}</h1>
+      <p class="mt-6 text-lg leading-8 text-slate-600">
+        {% trans "Farmio met en relation les producteurs agricoles et les acheteurs professionnels pour simplifier les achats, la traçabilité et la confiance dans les circuits locaux." %}
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="container-shell py-14 lg:py-18">
+  <div class="grid gap-6 md:grid-cols-3">
+    <article class="feature-card">
+      <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-xl text-emerald-700">
+        <i class="fa-solid fa-seedling"></i>
+      </div>
+      <h2 class="mt-5 text-xl font-bold text-slate-900">{% trans "Des produits de qualité" %}</h2>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{% trans "Des offres issues du terrain, avec une visibilité claire sur les produits et leur disponibilité." %}</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-xl text-emerald-700">
+        <i class="fa-solid fa-people-arrows"></i>
+      </div>
+      <h2 class="mt-5 text-xl font-bold text-slate-900">{% trans "Une relation directe" %}</h2>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{% trans "Le marché fonctionne directement entre producteurs et acheteurs pour éliminer les intermédiaires inutiles." %}</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-xl text-emerald-700">
+        <i class="fa-solid fa-shield-heart"></i>
+      </div>
+      <h2 class="mt-5 text-xl font-bold text-slate-900">{% trans "Une confiance renforcée" %}</h2>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{% trans "Les commandes, paiements, avis et suivis de commande sont encadrés pour rassurer chaque acteur du marché." %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="bg-slate-50 py-14 lg:py-18">
+  <div class="container-shell grid gap-8 lg:grid-cols-2">
+    <div class="card-surface p-7 sm:p-8">
+      <p class="section-label">{% trans "Notre mission" %}</p>
+      <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-900">{% trans "Rapprocher les acteurs du monde agricole." %}</h2>
+      <p class="mt-4 text-base leading-8 text-slate-600">
+        {% trans "Farmio aide les acteurs du secteur à mieux organiser leurs échanges, accélérer les ventes et renforcer la confiance entre production et achat." %}
+      </p>
+    </div>
+
+    <div class="card-surface p-7 sm:p-8">
+      <p class="section-label">{% trans "Confiance" %}</p>
+      <ul class="mt-4 space-y-4 text-slate-600">
+        <li class="flex items-start gap-3"><span class="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">✓</span><span>{% trans "Vérification du profil producteur avant publication." %}</span></li>
+        <li class="flex items-start gap-3"><span class="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">✓</span><span>{% trans "Parcours de commande et de paiement clair pour chaque acteur." %}</span></li>
+        <li class="flex items-start gap-3"><span class="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">✓</span><span>{% trans "Processus de messagerie, avis et notification pensés pour un usage réel." %}</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 {% endblock %}

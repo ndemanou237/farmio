@@ -6,12 +6,12 @@
 <div class="space-y-7">
   <div>
     <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dashboard</p>
-    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Supervision de la plateforme" %}</h1>
+    <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900">{% trans "Supervision de la plateforme" %}</h1>
     <p class="mt-2 text-sm text-slate-500">{% trans "Vue d'ensemble de l'activité Farmio." %}</p>
   </div>
 
   <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-    <a href="{% url 'users:producer-review-list' %}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)] transition hover:border-blue-200 hover:shadow-md">
+    <a href="{% url 'users:producer-review-list' %}" class="stat-card hover:border-emerald-200 hover:shadow-lg transition">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Producteurs en attente" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
@@ -23,7 +23,7 @@
       </div>
     </a>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="stat-card">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Utilisateurs actifs" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="stat-card">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Commandes du jour" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
@@ -47,28 +47,28 @@
       </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="stat-card">
       <span class="text-xs font-medium text-slate-500">{% trans "Acheteurs actifs" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ buyers_count }}</p>
     </div>
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="stat-card">
       <span class="text-xs font-medium text-slate-500">{% trans "Producteurs actifs" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ producers_count }}</p>
     </div>
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="stat-card">
       <span class="text-xs font-medium text-slate-500">{% trans "Commandes" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ orders_count }}</p>
       <p class="mt-1 text-xs text-slate-500">{{ completed_orders_count }} {% trans "terminées" %}</p>
     </div>
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="stat-card">
       <span class="text-xs font-medium text-slate-500">{% trans "Produits au catalogue" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ products_count }}</p>
     </div>
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="stat-card">
       <span class="text-xs font-medium text-slate-500">{% trans "Note moyenne approuvée" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-amber-600">{% if reviews_average %}{{ reviews_average|floatformat:1 }} ★{% else %}—{% endif %}</p>
     </div>
-    <a href="{% url 'reviews:moderation-list' %}" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm transition hover:border-emerald-400">
+    <a href="{% url 'reviews:moderation-list' %}" class="stat-card border-emerald-200 bg-emerald-50 hover:border-emerald-300 hover:shadow-lg transition">
       <span class="text-xs font-medium text-emerald-900">{% trans "Avis en attente" %}</span>
       <p class="mt-5 text-3xl font-extrabold text-emerald-800">{{ reviews_pending_count }}</p>
       <p class="mt-1 text-xs text-emerald-800">{{ reviews_count }} {% trans "avis approuvés" %}</p>
@@ -90,8 +90,8 @@
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div><h2 class="font-bold text-slate-900">{% trans "Paiements confirmés" %}</h2><p class="text-xs text-slate-500">{% trans "Les montants sont présentés séparément par devise." %}</p></div>
       <div class="flex flex-wrap gap-2">
-        <a href="{% url 'dashboard:report-pdf' %}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">{% trans "Télécharger le PDF" %}</a>
-        <a href="{% url 'dashboard:report-excel' %}" class="rounded-xl bg-[#166534] px-4 py-2 text-sm font-semibold text-white hover:bg-[#14532d]">{% trans "Exporter Excel" %}</a>
+        <a href="{% url 'dashboard:report-pdf' %}" class="btn-secondary px-4 py-2.5">{% trans "Télécharger le PDF" %}</a>
+        <a href="{% url 'dashboard:report-excel' %}" class="btn-primary px-4 py-2.5">{% trans "Exporter Excel" %}</a>
       </div>
     </div>
     <div class="mt-4 overflow-x-auto">
@@ -107,7 +107,7 @@
         <h2 class="text-lg font-bold text-slate-900">{% trans "Surveillance" %}</h2>
         <p class="text-sm text-slate-500">{% trans "Suivez les signaux importants de votre plateforme." %}</p>
       </div>
-      <a href="{% url 'catalog:product-list' %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+      <a href="{% url 'catalog:product-list' %}" class="btn-primary px-4 py-2.5">
         <i class="fa-solid fa-eye"></i>
         {% trans "Voir le catalogue" %}
       </a>

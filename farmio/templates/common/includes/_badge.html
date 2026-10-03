@@ -1,0 +1,23 @@
+{% with variant=variant|default:'default' %}
+  {% if variant == 'success' %}
+    <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+      {{ label|default:'Succès' }}
+    </span>
+  {% elif variant == 'warning' %}
+    <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-700">
+      {{ label|default:'Attention' }}
+    </span>
+  {% elif variant == 'danger' %}
+    <span class="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-700">
+      {{ label|default:'Danger' }}
+    </span>
+  {% elif variant == 'info' %}
+    <span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-700">
+      {{ label|default:'Info' }}
+    </span>
+  {% else %}
+    <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+      {{ label|default:'État' }}
+    </span>
+  {% endif %}
+{% endwith %}

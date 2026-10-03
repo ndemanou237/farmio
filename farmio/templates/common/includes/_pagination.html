@@ -1,0 +1,15 @@
+{% if is_paginated %}
+  <nav aria-label="Pagination" class="mt-8 flex items-center justify-center gap-2">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="btn-secondary px-3 py-2 text-xs">Précédent</a>
+    {% endif %}
+
+    <span class="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600">
+      Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="btn-primary px-3 py-2 text-xs">Suivant</a>
+    {% endif %}
+  </nav>
+{% endif %}

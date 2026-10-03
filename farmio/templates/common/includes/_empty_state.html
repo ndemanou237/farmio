@@ -1,0 +1,12 @@
+<div class="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center">
+  <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-emerald-700">
+    {% if icon %}{{ icon }}{% else %}<i class="fa-solid fa-box-open"></i>{% endif %}
+  </div>
+  <h3 class="mt-5 text-xl font-bold text-slate-900">{{ title|default:'Aucune donnée disponible' }}</h3>
+  <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">{{ message|default:'Aucun élément n’est disponible pour le moment.' }}</p>
+  {% if action_label and action_url %}
+    <div class="mt-6">
+      <a href="{{ action_url }}" class="btn-primary">{{ action_label }}</a>
+    </div>
+  {% endif %}
+</div>

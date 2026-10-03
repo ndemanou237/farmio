@@ -1,4 +1,15 @@
 {% load i18n %}
-<footer class="text-center text-xs text-gray-400 py-6 mt-12">
-  © {% now "Y" %} Farmio — {% trans "Tous droits réservés" %}
+<footer class="mt-16 border-t border-slate-200 bg-white/70">
+  <div class="container-shell flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-lg font-bold tracking-tight text-emerald-800">Farmio</p>
+      <p class="mt-1 text-sm text-slate-500">{% trans "Le marché agricole professionnel." %}</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+      <a href="{% url 'home' %}" class="nav-link">{% trans "Accueil" %}</a>
+      <a href="{% url 'catalog:product-list' %}" class="nav-link">{% trans "Catalogue" %}</a>
+      <a href="{% url 'about' %}" class="nav-link">{% trans "À propos" %}</a>
+    </div>
+    <p class="text-xs text-slate-500">© {% now "Y" %} Farmio — {% trans "Tous droits réservés" %}</p>
+  </div>
 </footer>

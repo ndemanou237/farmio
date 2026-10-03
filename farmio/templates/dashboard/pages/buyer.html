@@ -7,14 +7,14 @@
 <div class="space-y-7">
   <div>
     <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dashboard</p>
-    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+    <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900">
       {% trans "Bonjour" %} {{ request.user.get_short_name }}
     </h1>
     <p class="mt-2 text-sm text-slate-500">{% trans "Voici un aperçu rapide de votre activité sur Farmio." %}</p>
   </div>
 
   <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="stat-card">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Commandes" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="stat-card">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Articles dans le panier" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="stat-card">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Profil" %}</span>
         <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
@@ -57,7 +57,7 @@
         <h2 class="text-lg font-bold text-slate-900">{% trans "Commandes récentes" %}</h2>
         <p class="text-sm text-slate-500">{% trans "Suivez rapidement vos achats les plus récents." %}</p>
       </div>
-      <a href="{% url 'orders:list' %}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900">
+      <a href="{% url 'orders:list' %}" class="btn-secondary px-4 py-2.5">
         <i class="fa-solid fa-arrow-right"></i>
         {% trans "Voir tout" %}
       </a>
