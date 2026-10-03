@@ -1,0 +1,85 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Tableau de bord Acheteur" %} — Farmio{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-7">
+  <div>
+    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dashboard</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+      {% trans "Bonjour" %} {{ request.user.get_short_name }}
+    </h1>
+    <p class="mt-2 text-sm text-slate-500">{% trans "Voici un aperçu rapide de votre activité sur Farmio." %}</p>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Commandes" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-bag-shopping text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">{{ orders_count }}</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Articles dans le panier" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+          <i class="fa-solid fa-basket-shopping text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">{{ active_cart_count }}</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Profil" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <i class="fa-solid fa-user text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-lg font-extrabold tracking-tight text-slate-900">{{ request.user.get_short_name }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">{% trans "Commandes récentes" %}</h2>
+        <p class="text-sm text-slate-500">{% trans "Suivez rapidement vos achats les plus récents." %}</p>
+      </div>
+      <a href="{% url 'orders:list' %}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900">
+        <i class="fa-solid fa-arrow-right"></i>
+        {% trans "Voir tout" %}
+      </a>
+    </div>
+
+    {% if recent_orders %}
+      <div class="mt-5 space-y-3">
+        {% for order in recent_orders %}
+          <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            <div>
+              <p class="text-sm font-semibold text-slate-900">{{ order.producer.producer_profile.company_name|default:order.producer.get_short_name|default:order.producer.email }}</p>
+              <p class="text-xs text-slate-500">{{ order.get_status_display }} • {{ order.created_at|date:"d/m/Y" }}</p>
+            </div>
+            <span class="text-sm font-bold text-slate-900">{{ order.total_amount }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+        {% trans "Aucune commande pour le moment. Explorez le catalogue pour lancer votre premier achat." %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

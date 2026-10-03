@@ -1,0 +1,277 @@
+{% extends "users/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Inscription Acheteur" %} — Farmio{% endblock %}
+
+{% block users_content %}
+
+<div class="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-10">
+
+  <div class="w-full max-w-2xl">
+
+
+<!-- Carte principale -->
+<div class="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-8 sm:px-8">
+
+  <!-- ========================= -->
+  <!-- EN-TÊTE -->
+  <!-- ========================= -->
+  <div class="text-center mb-8">
+
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-green-100 mb-4">
+      <span class="text-2xl">🛒</span>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-900">
+      {% trans "Créer un compte Acheteur" %}
+    </h1>
+
+    <p class="text-gray-500 mt-2 text-sm">
+      {% trans "Accédez au catalogue des producteurs." %}
+    </p>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- FORMULAIRE -->
+  <!-- ========================= -->
+
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    novalidate
+    data-controller="signup-form"
+    class="space-y-5"
+  >
+
+    {% csrf_token %}
+
+
+    <!-- ========================= -->
+    <!-- INFORMATIONS PERSONNELLES -->
+    <!-- ========================= -->
+
+    <div>
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div
+          class="w-8 h-8 rounded-lg
+                 bg-green-100 text-green-700
+                 flex items-center justify-center"
+        >
+          <span class="text-sm">👤</span>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-900">
+            {% trans "Informations personnelles" %}
+          </h2>
+
+          <p class="text-xs text-gray-500">
+            {% trans "Vos informations de contact" %}
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="space-y-4">
+
+        {% include "users/includes/_form_field.html" with field=form.name %}
+
+        {% include "users/includes/_form_field.html" with field=form.email %}
+
+        {% include "users/includes/_form_field.html" with field=form.phone_number %}
+
+        {% include "users/includes/_form_field.html" with field=form.organization_name %}
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- LOCALISATION -->
+    <!-- ========================= -->
+
+    <div class="border-t border-gray-100 pt-6">
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div
+          class="w-8 h-8 rounded-lg
+                 bg-green-100 text-green-700
+                 flex items-center justify-center"
+        >
+          <span class="text-sm">📍</span>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-900">
+            {% trans "Localisation" %}
+          </h2>
+
+          <p class="text-xs text-gray-500">
+            {% trans "Indiquez votre lieu de résidence ou d'activité" %}
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="grid sm:grid-cols-3 gap-4">
+
+        {% include "users/includes/_form_field.html" with field=form.country %}
+
+        {% include "users/includes/_form_field.html" with field=form.region %}
+
+        {% include "users/includes/_form_field.html" with field=form.city %}
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- SÉCURITÉ -->
+    <!-- ========================= -->
+
+    <div class="border-t border-gray-100 pt-6">
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div
+          class="w-8 h-8 rounded-lg
+                 bg-green-100 text-green-700
+                 flex items-center justify-center"
+        >
+          <span class="text-sm">🔐</span>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-gray-900">
+            {% trans "Sécurité du compte" %}
+          </h2>
+
+          <p class="text-xs text-gray-500">
+            {% trans "Protégez votre compte avec un mot de passe sécurisé" %}
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="grid sm:grid-cols-2 gap-4">
+
+        {% include "users/includes/_form_field.html" with field=form.password1 %}
+
+        {% include "users/includes/_form_field.html" with field=form.password2 %}
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- BOUTON -->
+    <!-- ========================= -->
+
+    <div class="pt-2">
+
+      <button
+        type="submit"
+        class="w-full flex items-center justify-center gap-2
+               bg-green-700 hover:bg-green-800
+               text-white font-semibold
+               py-3 px-5
+               rounded-xl
+               cursor-pointer
+               shadow-sm hover:shadow-md
+               transition-all duration-200
+               focus:outline-none focus:ring-2
+               focus:ring-green-500 focus:ring-offset-2"
+      >
+
+        <span>
+          {% trans "Créer mon compte Acheteur" %}
+        </span>
+
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 7l5 5m0 0l-5 5m5-5H6"
+          />
+        </svg>
+
+      </button>
+
+    </div>
+
+  </form>
+
+
+  <!-- ========================= -->
+  <!-- CONNEXION -->
+  <!-- ========================= -->
+
+  <div class="flex items-center gap-4 my-7">
+
+    <div class="flex-1 h-px bg-gray-200"></div>
+
+    <span class="text-xs text-gray-400 uppercase">
+      {% trans "ou" %}
+    </span>
+
+    <div class="flex-1 h-px bg-gray-200"></div>
+
+  </div>
+
+
+  <p class="text-sm text-gray-500 text-center">
+
+    {% trans "Déjà inscrit ?" %}
+
+    <a
+      href="{% url 'users:login' %}"
+      class="text-green-700 font-semibold
+             hover:text-green-800
+             hover:underline
+             transition"
+    >
+      {% trans "Connectez-vous" %}
+    </a>
+
+  </p>
+
+</div>
+
+
+<!-- Texte sous la carte -->
+<p class="text-center text-xs text-gray-400 mt-5">
+  {% trans "Rejoignez la communauté Farmio et découvrez les producteurs près de chez vous." %}
+</p>
+
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script
+  type="module"
+  src="{% static 'js/users/form-validator.js' %}">
+</script>
+
+{% endblock %}

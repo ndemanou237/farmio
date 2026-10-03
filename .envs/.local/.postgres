@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=farmio
+POSTGRES_USER=jVpFYrwfuyXXahRerSSoYtIfomhsamgD
+POSTGRES_PASSWORD=sOw7zIMq1fRSHeYOHhOV2Gms1ApmYjApiBHmvDZUuX31FVelgs0IRUKkhqrnyI5O

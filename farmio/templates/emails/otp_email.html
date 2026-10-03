@@ -1,0 +1,68 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f7f6;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f6f7f6; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 480px; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+          
+          <!-- En-tête -->
+          <tr>
+            <td style="background-color: #166534; padding: 24px 20px; text-align: center;">
+              <span style="color: #ffffff; font-size: 22px; font-weight: bold; display: block;">
+                {{ site_name|default:"Farmio" }}
+              </span>
+              <span style="color: #bbf7d0; font-size: 13px; margin-top: 4px; display: block;">
+                {% trans "Code de vérification" %}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Contenu -->
+          <tr>
+            <td style="padding: 32px 24px; color: #374151; font-size: 15px; line-height: 1.6;">
+              <p style="margin-top: 0; font-size: 16px; font-weight: bold; color: #111827;">
+                {% blocktrans %}Bonjour {{ full_name }},{% endblocktrans %}
+              </p>
+              
+              <p style="margin-bottom: 20px; color: #4b5563;">
+                {% trans "Voici votre code de vérification à usage unique pour sécuriser votre accès :" %}
+              </p>
+
+              <!-- Bloc du Code OTP -->
+              <div style="background-color: #f0fdf4; border: 1px dashed #166534; border-radius: 8px; padding: 18px 12px; text-align: center; margin: 24px 0;">
+                <span style="font-size: 32px; font-weight: bold; letter-spacing: 10px; color: #166534; font-family: 'Courier New', Courier, monospace; display: inline-block; margin-left: 10px;">
+                  {{ code }}
+                </span>
+              </div>
+
+              <p style="margin-bottom: 24px; font-size: 14px; color: #374151; text-align: center;">
+                {% blocktrans %}Ce code expire dans <strong>{{ minutes }} minutes</strong>.{% endblocktrans %}
+              </p>
+
+              <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;">
+
+              <p style="font-size: 13px; color: #6b7280; margin: 0; line-height: 1.5;">
+                {% trans "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email en toute sécurité." %}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Pied de page -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 16px 20px; text-align: center; border-top: 1px solid #e5e7eb; color: #9ca3af; font-size: 12px;">
+              <p style="margin: 0;">© {% now "Y" %} {{ site_name|default:"Farmio" }}. {% trans "Tous droits réservés." %}</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

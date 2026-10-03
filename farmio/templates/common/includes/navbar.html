@@ -1,0 +1,16 @@
+{% load i18n %}
+<nav class="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between">
+  <a href="/" class="font-bold text-green-700 text-lg">Farmio</a>
+  <div class="flex items-center gap-4 text-sm">
+    {% if user.is_authenticated %}
+      <span class="text-xs font-medium text-gray-600">
+        {{ request.user.get_full_name|default:request.user.email }}
+      </span>
+      <a href="{% url 'users:profile-detail' %}" class="nav-link">{% trans "Mon profil" %}</a>
+      <a href="{% url 'users:logout' %}" class="nav-link">{% trans "Déconnexion" %}</a>
+    {% else %}
+      <a href="{% url 'users:login' %}" class="nav-link">{% trans "Connexion" %}</a>
+      <a href="{% url 'users:signup' %}" class="bg-green-700 text-white px-4 py-1.5 rounded-lg hover:bg-green-800">{% trans "Inscription" %}</a>
+    {% endif %}
+  </div>
+</nav>

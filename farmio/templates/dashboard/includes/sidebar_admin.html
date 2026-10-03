@@ -1,0 +1,30 @@
+{% load i18n %}
+
+<div class="mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-100/60">
+  {% trans "Navigation" %}
+</div>
+
+<a href="{% url 'home' %}" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
+  <i class="fa-solid fa-house text-sm w-4 text-center"></i>
+  <span>{% trans "Home" %}</span>
+</a>
+
+<a href="{% url 'dashboard:admin' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin' %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-chart-pie text-sm w-4 text-center"></i>
+  <span>{% trans "Dashboard" %}</span>
+</a>
+
+<a href="{% url 'users:producer-review-list' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if request.resolver_match.url_name == 'producer-review-list' %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-user-check text-sm w-4 text-center"></i>
+  <span>{% trans "Producteurs" %}</span>
+</a>
+
+<a href="{% url 'catalog:product-list' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
+  <i class="fa-solid fa-store text-sm w-4 text-center"></i>
+  <span>{% trans "Catalogue" %}</span>
+</a>
+
+<a href="{% url 'admin:index' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if request.resolver_match.url_name == 'index' %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-sliders text-sm w-4 text-center"></i>
+  <span>{% trans "Paramètres" %}</span>
+</a>

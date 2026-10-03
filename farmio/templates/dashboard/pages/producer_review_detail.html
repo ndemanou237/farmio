@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Examen du profil producteur" %} — Farmio{% endblock %}
+{% block dashboard_content %}
+<div class="max-w-2xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-bold mb-6">{{ profile.company_name }}</h1>
+  <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm mb-6 space-y-2">
+    <p><span class="text-gray-500 text-sm">{% trans "Contact" %}</span><br>{{ profile.user.name }} — {{ profile.user.email }} — {{ profile.user.phone_number }}</p>
+    <p><span class="text-gray-500 text-sm">{% trans "Localisation" %}</span><br>{{ profile.user.location }}</p>
+    <p><span class="text-gray-500 text-sm">{% trans "Immatriculation" %}</span><br>{{ profile.business_registration_number|default:"—" }}</p>
+    <p><span class="text-gray-500 text-sm">{% trans "Pièce d'identité" %}</span><br>
+      {% if profile.identity_document %}<a href="{{ profile.identity_document.url }}" class="text-green-700 hover:underline" target="_blank">{% trans "Voir le document" %}</a>{% else %}—{% endif %}
+    </p>
+    <p><span class="text-gray-500 text-sm">{% trans "Description" %}</span><br>{{ profile.description|default:"—" }}</p>
+  </div>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="flex gap-6 mb-4">
+      {% for radio in form.decision %}
+        <label class="flex items-center gap-2 text-sm text-gray-700">{{ radio.tag }} {{ radio.choice_label }}</label>
+      {% endfor %}
+    </div>
+    {% include "users/includes/_form_field.html" with field=form.reason %}
+    <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-medium py-2.5 px-6 rounded-lg transition">{% trans "Valider la décision" %}</button>
+  </form>
+</div>
+{% endblock %}

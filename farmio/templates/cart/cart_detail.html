@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Mon panier" %} — Farmio{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Farmio</p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Mon panier" %}</h1>
+    </div>
+    {% if not is_empty %}
+      <form method="post" action="{% url 'cart:clear' %}">
+        {% csrf_token %}
+        <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-100">
+          <i class="fa-solid fa-trash"></i>
+          {% trans "Vider le panier" %}
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if is_empty %}
+    <div class="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center shadow-sm">
+      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-emerald-600">
+        <i class="fa-solid fa-basket-shopping"></i>
+      </div>
+      <h2 class="text-lg font-semibold text-slate-800">{% trans "Votre panier est vide." %}</h2>
+      <p class="mt-2 text-sm text-slate-500">{% trans "Ajoutez des produits depuis le catalogue pour commencer votre commande." %}</p>
+      <a href="{% url 'catalog:product-list' %}" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+        {% trans "Explorer le catalogue" %}
+      </a>
+    </div>
+  {% else %}
+    <div class="grid gap-8 lg:grid-cols-[1.6fr_0.8fr]">
+      <div class="space-y-6">
+        {% for group in grouped_items %}
+          <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{% trans "Producteur" %}</p>
+                <h2 class="mt-1 text-lg font-bold text-slate-900">{{ group.producer.producer_profile.company_name|default:group.producer.name|default:group.producer.email }}</h2>
+              </div>
+              <span class="text-sm font-semibold text-slate-700">{{ group.total }}</span>
+            </div>
+
+            <div class="space-y-4">
+              {% for item in group.items %}
+                <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="flex items-center gap-4">
+                    {% if item.product.main_image %}
+                      <img src="{{ item.product.main_image.image.url }}" alt="{{ item.product.name }}" class="h-16 w-16 rounded-xl object-cover">
+                    {% else %}
+                      <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">🌾</div>
+                    {% endif %}
+                    <div>
+                      <p class="text-base font-semibold text-slate-900">{{ item.product.name }}</p>
+                      <p class="text-sm text-slate-500">{{ item.product.price }} / {{ item.product.get_unit_display }}</p>
+                      <p class="mt-1 text-sm font-semibold text-emerald-700">{% trans "Sous-total" %}: {{ item.subtotal }}</p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <form method="post" action="{% url 'cart:update-item' item.id %}">
+                      {% csrf_token %}
+                      <div class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5">
+                        <label class="sr-only" for="qty-{{ item.id }}">{% trans "Quantité" %}</label>
+                        <input id="qty-{{ item.id }}" name="quantity" type="number" min="1" value="{{ item.quantity }}" class="w-16 border-0 bg-transparent text-center text-sm font-medium text-slate-800 focus:outline-none">
+                        <button type="submit" class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{% trans "OK" %}</button>
+                      </div>
+                    </form>
+
+                    <form method="post" action="{% url 'cart:remove-item' item.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-red-200 hover:text-red-700">
+                        <i class="fa-solid fa-xmark"></i>
+                        {% trans "Supprimer" %}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <aside class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{% trans "Résumé" %}</p>
+        <div class="mt-4 space-y-4">
+          <div class="flex items-center justify-between text-sm text-slate-600">
+            <span>{% trans "Articles" %}</span>
+            <span>{{ cart.items_count }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm text-slate-600">
+            <span>{% trans "Total" %}</span>
+            <span class="text-base font-bold text-slate-900">{{ total }}</span>
+          </div>
+        </div>
+
+        <form method="post" action="{% url 'orders:validate-cart' %}" class="mt-6">
+          {% csrf_token %}
+          <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+            <i class="fa-solid fa-check"></i>
+            {% trans "Valider le panier" %}
+          </button>
+        </form>
+      </aside>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

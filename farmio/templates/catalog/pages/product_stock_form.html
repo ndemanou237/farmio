@@ -1,0 +1,35 @@
+{% extends "catalog/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Gérer le stock" %} — Farmio{% endblock %}
+
+{% block catalog_content %}
+<div class="mx-auto max-w-lg px-4 py-8 sm:px-6">
+  <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-100 px-5 py-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Stock</p>
+          <h1 class="text-xl font-bold text-slate-900">{{ object.name }}</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-5 sm:p-6">
+      <p class="mb-6 text-sm text-slate-500">{% trans "Mise à jour rapide du stock et de la disponibilité." %}</p>
+
+      <form method="post" novalidate class="space-y-5">
+        {% csrf_token %}
+        {% include "users/includes/_form_field.html" with field=form.quantity %}
+        {% include "users/includes/_form_field.html" with field=form.status %}
+
+        <button type="submit" class="btn-primary w-full px-4 py-3">
+          {% trans "Mettre à jour" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

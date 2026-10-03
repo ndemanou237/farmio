@@ -1,0 +1,138 @@
+{% extends "users/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Connexion" %} — Farmio{% endblock %}
+
+{% block users_content %}
+
+<div class="h-screen flex items-center justify-center px-4 py-10">
+
+  <div class="w-full max-w-md">
+
+
+<!-- Carte de connexion -->
+<div class="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-8 sm:px-8">
+
+  <!-- En-tête -->
+  <div class="text-center mb-8">
+
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-green-100 mb-4">
+      <span class="text-2xl">🌱</span>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-900">
+      {% trans "Bienvenue sur Farmio" %}
+    </h1>
+
+    <p class="text-gray-500 mt-2 text-sm">
+      {% trans "Connectez-vous pour accéder à votre espace." %}
+    </p>
+
+  </div>
+
+
+  <!-- Erreurs -->
+  {% if form.non_field_errors %}
+    <div class="mb-5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+
+  <!-- Formulaire -->
+  <form method="post" novalidate class="space-y-5">
+
+    {% csrf_token %}
+
+    <!-- Identifiant -->
+    <div>
+      {% include "users/includes/_form_field.html" with field=form.username %}
+    </div>
+
+
+    <!-- Mot de passe -->
+    <div data-controller="password-toggle">
+      {% include "users/includes/_form_field.html" with field=form.password %}
+    </div>
+
+
+    <!-- Mot de passe oublié -->
+    <div class="flex justify-end -mt-2">
+
+      <a
+        href="{% url 'users:password-reset-request' %}"
+        class="text-sm font-medium text-green-700 hover:text-green-800 hover:underline transition"
+      >
+        {% trans "Mot de passe oublié ?" %}
+      </a>
+
+    </div>
+
+
+    <!-- Bouton -->
+    <button
+      type="submit"
+      class="w-full bg-green-700 hover:bg-green-800
+             text-white font-semibold
+             py-3 rounded-xl
+             transition-all duration-200
+             shadow-sm hover:shadow-md
+             focus:outline-none focus:ring-2
+             focus:ring-green-500 focus:ring-offset-2"
+    >
+      {% trans "Se connecter" %}
+    </button>
+
+  </form>
+
+
+  <!-- Séparation -->
+  <div class="flex items-center gap-4 my-7">
+
+    <div class="flex-1 h-px bg-gray-200"></div>
+
+    <span class="text-xs text-gray-400 uppercase">
+      {% trans "ou" %}
+    </span>
+
+    <div class="flex-1 h-px bg-gray-200"></div>
+
+  </div>
+
+
+  <!-- Inscription -->
+  <p class="text-sm text-gray-500 text-center">
+
+    {% trans "Pas encore de compte ?" %}
+
+    <a
+      href="{% url 'users:signup' %}"
+      class="text-green-700 font-semibold hover:text-green-800 hover:underline transition"
+    >
+      {% trans "Inscrivez-vous" %}
+    </a>
+
+  </p>
+
+</div>
+
+<!-- Petit texte sous la carte -->
+<p class="text-center text-xs text-gray-400 mt-5">
+  {% trans "Votre espace Farmio, simplement et en toute sécurité." %}
+</p>
+
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script
+  type="module"
+  src="{% static 'js/users/password-toggle.js' %}">
+</script>
+
+{% endblock %}

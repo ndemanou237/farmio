@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Messages" %} — Farmio{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6"><p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Farmio</p><h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Messages" %}</h1><p class="mt-2 text-sm text-slate-500">{% trans "Échangez avec les producteurs liés à vos commandes confirmées." %}</p></div>
+  <div class="space-y-3">
+    {% for conversation in conversations %}
+      <a href="{% url 'messaging:detail' conversation.pk %}" class="card-dashboard flex items-center justify-between gap-4 p-5 transition hover:border-emerald-300 hover:shadow-md">
+        <div class="flex min-w-0 items-center gap-4"><span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700"><i class="fa-solid fa-seedling" aria-hidden="true"></i></span><div class="min-w-0"><h2 class="truncate font-bold text-slate-900">{% if request.user.pk == conversation.buyer_id %}{{ conversation.producer.producer_profile.company_name|default:conversation.producer.name|default:conversation.producer.email }}{% else %}{{ conversation.buyer.name|default:conversation.buyer.email }}{% endif %}</h2><p class="mt-1 text-sm text-slate-500">{{ conversation.last_activity_at|date:"d/m/Y H:i" }}</p></div></div><i class="fa-solid fa-chevron-right text-sm text-slate-400" aria-hidden="true"></i>
+      </a>
+    {% empty %}
+      <section class="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center"><i class="fa-regular fa-comments text-3xl text-emerald-600" aria-hidden="true"></i><h2 class="mt-4 font-semibold text-slate-900">{% trans "Aucune conversation" %}</h2><p class="mt-1 text-sm text-slate-500">{% trans "Une conversation est disponible dès qu'une commande est confirmée." %}</p></section>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

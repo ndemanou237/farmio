@@ -1,0 +1,125 @@
+{% extends "dashboard/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Vue d'ensemble" %} — Farmio{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-7">
+  <div class="flex flex-col gap-4 rounded-[28px] bg-gradient-to-r from-emerald-50 via-white to-lime-50 px-6 py-5 shadow-sm ring-1 ring-emerald-100 md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700/70">Farmio</p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight text-[#1C4332]">{% trans "Vue d'ensemble" %}</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="{% url 'catalog:product-create' %}" class="inline-flex items-center gap-2 rounded-xl bg-[#1C4332] px-4 py-2 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(28,67,50,0.25)] transition hover:bg-[#163b2d]">
+        <i class="fa-solid fa-plus text-xs"></i>
+        {% trans "Publier un produit" %}
+      </a>
+    </div>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div class="rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Produits" %}</span>
+        <span class="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-semibold text-emerald-700">{% trans "En ligne" %}</span>
+      </div>
+      <div class="mt-5 flex items-end justify-between gap-3">
+        <div>
+          <p class="text-3xl font-bold text-slate-900">{{ products_count }}</p>
+          <p class="mt-1 text-[11px] text-slate-500">{% trans "Produits publiés" %}</p>
+        </div>
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-[#1C4332]">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Commandes" %}</span>
+        <span class="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold text-amber-700">{% trans "À traiter" %}</span>
+      </div>
+      <div class="mt-5 flex items-end justify-between gap-3">
+        <div>
+          <p class="text-3xl font-bold text-slate-900">{{ pending_orders_count }}</p>
+          <p class="mt-1 text-[11px] text-slate-500">{% trans "Commandes active" %}</p>
+        </div>
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Profil" %}</span>
+        <span class="rounded-full bg-blue-100 px-2 py-1 text-[10px] font-semibold text-blue-700">{% trans "Actif" %}</span>
+      </div>
+      <div class="mt-5 flex items-end justify-between gap-3">
+        <div>
+          <p class="text-lg font-bold text-slate-900">{{ producer_profile.company_name|default:request.user.get_short_name }}</p>
+          <p class="mt-1 text-[11px] text-slate-500">{% trans "Vérifié et approuvé" %}</p>
+        </div>
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-user-check"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="grid gap-5 xl:grid-cols-[1.3fr_0.9fr]">
+    <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Récents</p>
+          <h2 class="mt-2 text-2xl font-bold text-[#1C4332]">{% trans "Commandes récentes" %}</h2>
+        </div>
+        <a href="{% url 'orders:list' %}" class="text-sm font-semibold text-emerald-700">{% trans "Voir tout" %}</a>
+      </div>
+
+      {% if recent_orders %}
+        <div class="space-y-3">
+          {% for order in recent_orders %}
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+              <div>
+                <p class="text-sm font-semibold text-slate-900">{{ order.buyer.get_short_name }}</p>
+                <p class="text-xs text-slate-500">{{ order.get_status_display }} • {{ order.created_at|date:"d/m/Y" }}</p>
+              </div>
+              <span class="text-sm font-bold text-slate-900">{{ order.total_amount }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+          {% trans "Aucune commande n'a été reçue pour le moment." %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Actions</p>
+          <h2 class="mt-2 text-2xl font-bold text-[#1C4332]">{% trans "Accès rapide" %}</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <a href="{% url 'catalog:product-list-mine' %}" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-700">
+          <span>{% trans "Mes produits" %}</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="{% url 'catalog:product-create' %}" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-700">
+          <span>{% trans "Ajouter un produit" %}</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="{% url 'users:profile-detail' %}" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-700">
+          <span>{% trans "Mon profil" %}</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

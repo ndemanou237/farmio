@@ -1,0 +1,113 @@
+{% extends "catalog/base.html" %}
+{% load i18n static %}
+{% block title %}{{ product.name }} — Farmio{% endblock %}
+
+{% block catalog_content %}
+<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="grid gap-8 p-5 sm:p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+      <div class="space-y-4">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+          {% if product.main_image %}
+            <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="h-[420px] w-full object-cover" id="main-preview">
+          {% else %}
+            <div class="flex h-[420px] w-full items-center justify-center text-5xl text-slate-300">🌾</div>
+          {% endif %}
+        </div>
+
+        {% if product.images.count > 1 %}
+          <div class="grid grid-cols-5 gap-3">
+            {% for image in product.images.all %}
+              <button type="button" data-controller="thumbnail-swap" data-image-url="{{ image.image.url }}" class="group aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100 transition hover:border-emerald-400">
+                <img src="{{ image.image.url }}" alt="" class="h-full w-full object-cover transition group-hover:scale-105">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col justify-between">
+        <div>
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">{{ product.category.name }}</span>
+            <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold text-white
+              {% if product.status == 'AVAILABLE' %} bg-emerald-500
+              {% elif product.status == 'OUT_OF_STOCK' %} bg-amber-500
+              {% else %} bg-slate-600
+              {% endif %}">
+              {{ product.get_status_display }}
+            </span>
+          </div>
+
+          <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ product.name }}</h1>
+
+          <div class="mt-5 flex items-end gap-3">
+            <span class="text-3xl font-extrabold text-slate-900">{{ product.price }}</span>
+            <span class="pb-1 text-sm text-slate-500">/{{ product.get_unit_display }}</span>
+          </div>
+
+          <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div class="flex items-center justify-between gap-3">
+              <span>{% trans "Disponibilité" %}</span>
+              <span class="font-semibold {% if product.status == 'AVAILABLE' %}text-emerald-700{% else %}text-slate-900{% endif %}">{{ product.quantity }} {{ product.get_unit_display }}</span>
+            </div>
+          </div>
+
+          <p class="mt-6 whitespace-pre-line text-[15px] leading-7 text-slate-600">{{ product.description }}</p>
+        </div>
+
+        <div class="mt-8 space-y-5 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">{% trans "Vendu par" %}</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">{{ product.producer.producer_profile.company_name|default:product.producer.name }}</p>
+            <p class="text-sm text-slate-500">{{ product.producer.location }}</p>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row">
+            {% if user != product.producer and product.status == 'AVAILABLE' and product.quantity > 0 %}
+              <form method="post" action="{% url 'cart:add' %}" class="flex flex-1">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="number" name="quantity" value="1" min="1" max="{{ product.quantity }}" data-unit-price="{{ product.price.amount }}" class="mr-2 w-20 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100" aria-label="{% trans 'Quantité' %}">
+                <button type="submit" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  {% trans "Ajouter au panier" %}
+                </button>
+              </form>
+              <p class="text-xs text-slate-500 sm:absolute sm:mt-16" aria-live="polite">{% trans "Total estimé" %}: <span id="purchase-total" class="font-semibold text-slate-900">{{ product.price }}</span></p>
+            {% elif user != product.producer %}
+              <span class="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">{% trans "Produit indisponible" %}</span>
+            {% else %}
+              <span class="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-500">{% trans "Votre produit" %}</span>
+            {% endif %}
+            {% if user == product.producer %}
+              <a href="{% url 'catalog:product-update' product.slug %}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-100">
+                <i class="fa-solid fa-pen-to-square"></i>
+                {% trans "Modifier" %}
+              </a>
+            {% endif %}
+          </div>
+
+          {% if user == product.producer %}
+            <div class="flex flex-wrap gap-2 pt-2 text-sm">
+              <a href="{% url 'catalog:product-stock-update' product.slug %}" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 font-medium text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                {% trans "Gérer le stock" %}
+              </a>
+              <a href="{% url 'catalog:product-delete' product.slug %}" class="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 font-medium text-red-700 transition hover:bg-red-100">
+                <i class="fa-solid fa-trash"></i>
+                {% trans "Supprimer" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/catalog/thumbnail-swap.js' %}"></script>
+{% endblock %}

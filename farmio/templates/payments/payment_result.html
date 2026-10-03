@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "État du paiement" %} — Farmio{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+  <section class="card-dashboard p-6 text-center sm:p-10">
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl {% if payment.status == 'success' %}bg-emerald-100 text-emerald-700{% elif payment.status == 'failed' %}bg-red-100 text-red-700{% else %}bg-amber-100 text-amber-700{% endif %}">
+      {% if payment.status == 'success' %}<i class="fa-solid fa-check text-2xl" aria-hidden="true"></i>{% elif payment.status == 'failed' %}<i class="fa-solid fa-xmark text-2xl" aria-hidden="true"></i>{% else %}<i class="fa-solid fa-clock text-2xl" aria-hidden="true"></i>{% endif %}
+    </div>
+    <p class="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">{% trans "Commande" %} {{ order.reference }}</p>
+    {% if payment.status == 'success' %}
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Paiement confirmé" %}</h1>
+      <p class="mt-3 text-slate-600">{% trans "Votre paiement a été confirmé par le prestataire." %}</p>
+    {% elif payment.status == 'failed' %}
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Paiement échoué" %}</h1>
+      <p class="mt-3 text-slate-600">{{ payment.failure_reason|default:_('Le prestataire n’a pas confirmé le paiement.') }}</p>
+    {% elif payment.status == 'cancelled' %}
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Paiement annulé" %}</h1>
+      <p class="mt-3 text-slate-600">{% trans "Aucun paiement n'a été confirmé." %}</p>
+    {% elif payment.provider == 'mobile_money_manual' %}
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Intention Mobile Money enregistrée" %}</h1>
+      <p class="mt-3 text-slate-600">{% trans "Aucune demande de paiement n'a été envoyée au fournisseur et aucun fonds n'a été collecté. Le statut restera en attente d'une intégration réelle." %}</p>
+    {% else %}
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Confirmation en cours" %}</h1>
+      <p class="mt-3 text-slate-600">{% trans "Le retour du navigateur ne confirme pas le paiement. La page sera actualisée après réception de la confirmation sécurisée du prestataire." %}</p>
+      <p class="mt-2 text-sm text-slate-500">{% trans "Référence de paiement" %} : {{ payment.provider_reference }}</p>
+    {% endif %}
+    {% if payment %}
+      <dl class="mx-auto mt-6 max-w-sm space-y-2 rounded-2xl bg-slate-50 p-4 text-left text-sm">
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">{% trans "Montant" %}</dt><dd class="font-semibold text-slate-900">{{ payment.amount }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">{% trans "Statut" %}</dt><dd class="font-semibold text-slate-900">{{ payment.get_status_display }}</dd></div>
+      </dl>
+    {% endif %}
+    <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+      {% if payment.status == 'pending' and payment.provider != 'mobile_money_manual' %}
+        <a href="{% url 'payments:start' order.pk %}" class="btn-primary">{% trans "Reprendre le paiement" %}</a>
+      {% elif payment.status == 'failed' or payment.status == 'cancelled' or not payment %}
+        <a href="{% url 'payments:start' order.pk %}" class="btn-primary">{% trans "Réessayer" %}</a>
+      {% endif %}
+      <a href="{% url 'orders:detail' order.pk %}" class="btn-secondary">{% trans "Voir la commande" %}</a>
+    </div>
+  </section>
+</main>
+{% if payment.status == 'pending' and payment.provider == 'stripe' %}
+  <meta http-equiv="refresh" content="8">
+{% endif %}
+{% endblock %}

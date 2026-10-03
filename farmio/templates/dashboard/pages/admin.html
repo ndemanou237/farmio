@@ -1,0 +1,64 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Tableau de bord Administrateur" %} — Farmio{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-7">
+  <div>
+    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dashboard</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Supervision de la plateforme" %}</h1>
+    <p class="mt-2 text-sm text-slate-500">{% trans "Vue d'ensemble de l'activité Farmio." %}</p>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <a href="{% url 'users:producer-review-list' %}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)] transition hover:border-blue-200 hover:shadow-md">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Producteurs en attente" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <i class="fa-solid fa-user-check text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-emerald-700">{{ pending_producers_count }}</p>
+      </div>
+    </a>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Utilisateurs actifs" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+          <i class="fa-solid fa-users text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">{{ users_count }}</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Commandes du jour" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+          <i class="fa-solid fa-cart-shopping text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">{{ orders_today_count }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">{% trans "Surveillance" %}</h2>
+        <p class="text-sm text-slate-500">{% trans "Suivez les signaux importants de votre plateforme." %}</p>
+      </div>
+      <a href="{% url 'catalog:product-list' %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+        <i class="fa-solid fa-eye"></i>
+        {% trans "Voir le catalogue" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

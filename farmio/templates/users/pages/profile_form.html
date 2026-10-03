@@ -1,0 +1,107 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Modifier mon profil" %} — Farmio{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-7">
+  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Profil</p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Modifier mon profil" %}</h1>
+    </div>
+    <a href="{% url 'users:profile-detail' %}" class="btn-ghost">
+      <i class="fa-solid fa-arrow-left text-xs"></i>
+      {% trans "Retour au profil" %}
+    </a>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <form method="post" enctype="multipart/form-data" novalidate class="space-y-6">
+      {% csrf_token %}
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="space-y-6">
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <label for="{{ form.name.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <p class="mt-2 text-xs text-red-600">{{ form.name.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <label for="{{ form.phone_number.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ form.phone_number.label }}</label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}
+              <p class="mt-2 text-xs text-red-600">{{ form.phone_number.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if producer_form %}
+        <div class="space-y-6">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h2 class="text-base font-bold text-slate-900">{% trans "Informations professionnelles" %}</h2>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <label for="{{ producer_form.company_name.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ producer_form.company_name.label }}</label>
+            {{ producer_form.company_name }}
+            {% if producer_form.company_name.errors %}
+              <p class="mt-2 text-xs text-red-600">{{ producer_form.company_name.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <label for="{{ producer_form.business_registration_number.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ producer_form.business_registration_number.label }}</label>
+            {{ producer_form.business_registration_number }}
+            {% if producer_form.business_registration_number.errors %}
+              <p class="mt-2 text-xs text-red-600">{{ producer_form.business_registration_number.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 p-4">
+            <label for="{{ producer_form.identity_number.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ producer_form.identity_number.label }}</label>
+            {{ producer_form.identity_number }}
+            {% if producer_form.identity_number.errors %}
+              <p class="mt-2 text-xs text-red-600">{{ producer_form.identity_number.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if producer_form %}
+      <div class="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div>
+          <label for="{{ producer_form.identity_document.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ producer_form.identity_document.label }}</label>
+          {{ producer_form.identity_document }}
+          {% if producer_form.identity_document.errors %}
+            <p class="mt-2 text-xs text-red-600">{{ producer_form.identity_document.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="{{ producer_form.description.id_for_label }}" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{{ producer_form.description.label }}</label>
+          {{ producer_form.description }}
+          {% if producer_form.description.errors %}
+            <p class="mt-2 text-xs text-red-600">{{ producer_form.description.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+        <a href="{% url 'users:profile-detail' %}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900">
+          {% trans "Annuler" %}
+        </a>
+        <button type="submit" class="btn-accent">
+          <i class="fa-solid fa-floppy-disk text-xs"></i>
+          {% trans "Enregistrer" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "catalog/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Supprimer le produit" %} — Farmio{% endblock %}
+
+{% block catalog_content %}
+<div class="mx-auto max-w-xl px-4 py-10 sm:px-6">
+  <div class="overflow-hidden rounded-3xl border border-red-100 bg-white shadow-sm">
+    <div class="bg-red-50 px-5 py-6 text-center sm:px-6">
+      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-red-600">{% trans "Attention" %}</p>
+      <h1 class="mt-2 text-2xl font-bold text-slate-900">{% trans "Confirmer la suppression" %}</h1>
+    </div>
+
+    <div class="p-5 sm:p-6">
+      <div class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {% blocktrans with name=object.name %}Voulez-vous vraiment supprimer "{{ name }}" ? Cette action peut être annulée par un administrateur.{% endblocktrans %}
+      </div>
+
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <a href="{{ object.get_absolute_url }}" class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+            {% trans "Annuler" %}
+          </a>
+          <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700">
+            {% trans "Confirmer la suppression" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

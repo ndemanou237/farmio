@@ -1,0 +1,239 @@
+{% extends "catalog/base.html" %}
+{% load i18n static %}
+
+{% block title %}
+  {% if is_update %}
+    {% trans "Modifier le produit" %}
+  {% else %}
+    {% trans "Publier un produit" %}
+  {% endif %} — Farmio
+{% endblock %}
+
+{% block catalog_content %}
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-xl text-emerald-700">
+        {% if is_update %}
+          <i class="fa-solid fa-pen-to-square"></i>
+        {% else %}
+          <i class="fa-solid fa-plus"></i>
+        {% endif %}
+      </div>
+
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Dashboard</p>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          {% if is_update %}
+            {% trans "Modifier le produit" %}
+          {% else %}
+            {% trans "Publier un nouveau produit" %}
+          {% endif %}
+        </h1>
+        <p class="mt-1 text-sm text-slate-500">
+          {% if is_update %}
+            {% trans "Mettez à jour les informations de votre produit." %}
+          {% else %}
+            {% trans "Ajoutez un produit à votre catalogue Farmio." %}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" novalidate class="space-y-6">
+    {% csrf_token %}
+
+    <section class="card-dashboard overflow-hidden">
+      <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+          <i class="fa-solid fa-box text-sm"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-slate-900">{% trans "Informations générales" %}</h2>
+          <p class="text-xs text-slate-500">{% trans "Présentez votre produit aux acheteurs." %}</p>
+        </div>
+      </div>
+
+      <div class="space-y-5 p-5 sm:p-6">
+        {% include "users/includes/_form_field.html" with field=form.name %}
+        {% include "users/includes/_form_field.html" with field=form.category %}
+        {% include "users/includes/_form_field.html" with field=form.description %}
+      </div>
+    </section>
+
+    <section class="card-dashboard overflow-hidden">
+      <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+          <i class="fa-solid fa-tags text-sm"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-slate-900">{% trans "Prix et disponibilité" %}</h2>
+          <p class="text-xs text-slate-500">{% trans "Définissez le prix, la quantité et le statut du produit." %}</p>
+        </div>
+      </div>
+
+      <div class="space-y-5 p-5 sm:p-6">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div>
+            <label for="{{ form.price.id_for_label }}" class="mb-1.5 block text-sm font-medium text-slate-700">
+              {% trans "Prix unitaire" %}
+              {% if form.price.field.required %}
+                <span class="text-red-500">*</span>
+              {% endif %}
+            </label>
+
+            <div class="money-field flex items-center gap-2.5 [&>input]:w-full [&>input]:flex-1 [&>input]:rounded-xl [&>input]:border-slate-300 [&>input]:bg-slate-50 [&>input]:px-4 [&>input]:py-2.5 [&>input]:text-slate-900 [&>input]:shadow-sm [&>input]:focus:border-emerald-500 [&>input]:focus:ring-emerald-100 [&>select]:w-28 [&>select]:shrink-0 [&>select]:rounded-xl [&>select]:border-slate-300 [&>select]:bg-slate-50 [&>select]:px-3 [&>select]:py-2.5 [&>select]:font-bold [&>select]:text-slate-700 [&>select]:shadow-sm [&>select]:focus:border-emerald-500 [&>select]:focus:ring-emerald-100 [&>select]:cursor-pointer">
+              {{ form.price }}
+            </div>
+
+            {% if form.price.help_text %}
+              <p class="mt-1.5 text-xs text-slate-400">{{ form.price.help_text }}</p>
+            {% endif %}
+
+            {% for error in form.price.errors %}
+              <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error }}
+              </p>
+            {% endfor %}
+          </div>
+
+          <div>
+            {% include "users/includes/_form_field.html" with field=form.quantity %}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {% include "users/includes/_form_field.html" with field=form.unit %}
+          {% include "users/includes/_form_field.html" with field=form.status %}
+        </div>
+      </div>
+    </section>
+
+    <section class="card-dashboard overflow-hidden">
+      <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+          <i class="fa-solid fa-images text-sm"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-slate-900">{% trans "Photos du produit" %}</h2>
+          <p class="text-xs text-slate-500">{% trans "Ajoutez des photos pour présenter votre produit." %}</p>
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-6">
+        <div data-controller="image-upload">
+          {{ image_form.main_image_index }}
+
+          <label
+            for="{{ image_form.images.id_for_label }}"
+            data-role="dropzone"
+            class="group relative block cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center transition hover:border-emerald-400 hover:bg-emerald-50/50"
+          >
+            <div class="flex flex-col items-center">
+              <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-xl text-emerald-700 transition group-hover:scale-105">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+
+              <p class="text-sm font-semibold text-slate-700">{% trans "Glissez vos photos ici" %}</p>
+              <p class="mt-1 text-xs text-slate-500">{% trans "ou cliquez pour parcourir vos fichiers" %}</p>
+
+              <div class="mt-4 flex items-center gap-2 text-[11px] text-slate-400">
+                <i class="fa-solid fa-images"></i>
+                <span>{% trans "Plusieurs images peuvent être sélectionnées." %}</span>
+              </div>
+            </div>
+
+            <div class="hidden">{{ image_form.images }}</div>
+          </label>
+
+          <div data-role="preview-grid" class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4"></div>
+
+          {% for error in image_form.images.errors %}
+            <div class="mt-3 flex items-start gap-2 rounded-xl border border-red-100 bg-red-50 px-3 py-2.5 text-xs text-red-700">
+              <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+              <span>{{ error }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <div class="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:items-center sm:justify-end">
+      {% if is_update %}
+        <a href="{% url 'catalog:product-detail' object.slug %}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+          <i class="fa-solid fa-xmark"></i>
+          {% trans "Annuler" %}
+        </a>
+      {% endif %}
+
+      <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800">
+        {% if is_update %}
+          <i class="fa-solid fa-floppy-disk"></i>
+          {% trans "Enregistrer les modifications" %}
+        {% else %}
+          <i class="fa-solid fa-plus"></i>
+          {% trans "Publier le produit" %}
+        {% endif %}
+      </button>
+    </div>
+  </form>
+
+  {% if is_update and existing_images %}
+    <section class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+          <i class="fa-solid fa-photo-film text-sm"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-slate-900">{% trans "Images actuelles" %}</h2>
+          <p class="text-xs text-slate-500">{% trans "Gérez les images déjà associées à ce produit." %}</p>
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-6">
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {% for image in existing_images %}
+            <div class="group relative overflow-hidden rounded-2xl border-2 bg-slate-100 {% if image.is_main %}border-emerald-500{% else %}border-slate-200{% endif %}">
+              <img src="{{ image.image.url }}" alt="{% trans 'Image du produit' %}" class="h-32 w-full object-cover transition duration-300 group-hover:scale-105">
+
+              {% if image.is_main %}
+                <span class="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2 py-1 text-[10px] font-semibold text-white shadow-sm">
+                  <i class="fa-solid fa-star text-[8px]"></i>
+                  {% trans "Principale" %}
+                </span>
+              {% endif %}
+
+              <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent p-2 opacity-0 transition group-hover:opacity-100">
+                {% if not image.is_main %}
+                  <form method="post" action="{% url 'catalog:product-image-set-main' object.slug image.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-[10px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100">
+                      <i class="fa-solid fa-star"></i>
+                      {% trans "Principale" %}
+                    </button>
+                  </form>
+                {% else %}
+                  <span></span>
+                {% endif %}
+
+                <form method="post" action="{% url 'catalog:product-image-delete' object.slug image.pk %}" onsubmit="return confirm('{% trans "Supprimer cette image ?" %}');">
+                  {% csrf_token %}
+                  <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white shadow-sm transition hover:bg-red-700" title="{% trans 'Supprimer cette image' %}" aria-label="{% trans 'Supprimer cette image' %}">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script type="module" src="{% static 'js/catalog/image-upload.js' %}"></script>
+{% endblock %}

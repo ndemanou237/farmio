@@ -1,0 +1,13 @@
+{% load i18n %}
+{# Menu latéral : le contenu change selon le rôle de l'utilisateur connecté. #}
+<aside class="w-56 border-r border-gray-100 bg-white px-4 py-6 hidden sm:block">
+  <nav class="space-y-1 text-sm">
+    {% if user.is_admin %}
+      {% include "dashboard/includes/sidebar_admin.html" %}
+    {% elif user.can_sell %}
+      {% include "dashboard/includes/sidebar_producer.html" %}
+    {% elif user.is_buyer %}
+      {% include "dashboard/includes/sidebar_buyer.html" %}
+    {% endif %}
+  </nav>
+</aside>

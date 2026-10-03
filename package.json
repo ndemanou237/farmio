@@ -1,0 +1,30 @@
+{
+  "name": "farmio",
+  "version": "1.0.0",
+  "description": "une plateforme qui lie les producteurs agricole au acheteur professionnel",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "tailwindcss -i ./farmio/static/css/input.css -o ./farmio/static/css/project.css --watch",
+    "build": "tailwindcss -i ./farmio/static/css/input.css -o ./farmio/static/css/project.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HooYia/farmio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HooYia/farmio/issues"
+  },
+  "homepage": "https://github.com/HooYia/farmio#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

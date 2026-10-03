@@ -1,0 +1,76 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Tableau de bord Producteur" %} — Farmio{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-7">
+  <div>
+    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dashboard</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+      {% trans "Bienvenue" %}, {{ producer_profile.company_name|default:request.user.name|default:request.user.username }}
+    </h1>
+    <p class="mt-2 text-sm text-slate-500">{% trans "Voici un aperçu de votre activité sur Farmio." %}</p>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Produits publiés" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+          <i class="fa-solid fa-boxes-stacked text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">—</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Commandes en attente" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+          <i class="fa-solid fa-receipt text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">—</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-slate-500">{% trans "Note moyenne" %}</span>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+          <i class="fa-solid fa-star text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5">
+        <p class="text-3xl font-extrabold tracking-tight text-slate-900">—</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">{% trans "Actions rapides" %}</h2>
+        <p class="text-sm text-slate-500">{% trans "Accédez rapidement à vos outils de gestion." %}</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="{% url 'catalog:product-list-mine' %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          {% trans "Mes produits" %}
+        </a>
+        <a href="{% url 'users:profile-detail' %}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900">
+          <i class="fa-solid fa-user"></i>
+          {% trans "Mon profil" %}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-400">
+    {% trans "Ces indicateurs seront alimentés dès que les modules catalogue et commandes seront branchés." %}
+  </p>
+</div>
+{% endblock %}

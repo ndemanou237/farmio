@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<div class="mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-100/60">
+  {% trans "Navigation" %}
+</div>
+
+<a href="{% url 'home' %}" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
+  <i class="fa-solid fa-house text-sm w-4 text-center"></i>
+  <span>{% trans "Home" %}</span>
+</a>
+
+<a href="{% url 'dashboard:producer' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if request.resolver_match.url_name == 'producer' %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-chart-line text-sm w-4 text-center"></i>
+  <span>{% trans "Dashboard" %}</span>
+</a>
+
+<a href="{% url 'catalog:product-list-mine' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if request.resolver_match.url_name == 'product-list-mine' %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-boxes-stacked text-sm w-4 text-center"></i>
+  <span>{% trans "Mes produits" %}</span>
+</a>
+
+<a href="{% url 'orders:list' %}" class="group mt-1 flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
+  <div class="flex items-center gap-3">
+    <i class="fa-solid fa-receipt text-sm w-4 text-center"></i>
+    <span>{% trans "Commandes reçues" %}</span>
+  </div>
+</a>
+
+<a href="{% url 'users:profile-detail' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {% if 'profile' in request.resolver_match.url_name %}bg-[#FDFBF7] text-[#1C4332] shadow-sm{% else %}text-emerald-100/80 hover:bg-white/5 hover:text-white{% endif %}">
+  <i class="fa-solid fa-user text-sm w-4 text-center"></i>
+  <span>{% trans "Mon profil" %}</span>
+</a>

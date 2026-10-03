@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Paiement de la commande" %} — Farmio{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-7">
+    <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Farmio · {% trans "Paiement sécurisé" %}</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{% trans "Régler ma commande" %}</h1>
+    <p class="mt-2 text-sm text-slate-500">{% trans "Vérifiez le récapitulatif avant de choisir un moyen de paiement." %}</p>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <section class="card-dashboard p-5 sm:p-7" aria-labelledby="order-summary-heading">
+      <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-5">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Commande" %}</p>
+          <h2 id="order-summary-heading" class="mt-1 text-xl font-bold text-slate-900">{{ order.reference }}</h2>
+        </div>
+        <span class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">{{ order.get_status_display }}</span>
+      </div>
+      <div class="mt-5 rounded-2xl bg-emerald-50/70 p-4">
+        <p class="text-xs font-semibold uppercase tracking-wide text-emerald-800">{% trans "Producteur" %}</p>
+        <p class="mt-1 font-semibold text-slate-900">{{ order.producer.producer_profile.company_name|default:order.producer.name|default:order.producer.email }}</p>
+      </div>
+      <ul class="mt-5 divide-y divide-slate-100">
+        {% for line in order.lines.all %}
+          <li class="flex items-center justify-between gap-4 py-3">
+            <div><p class="font-medium text-slate-800">{{ line.product.name }}</p><p class="text-sm text-slate-500">{{ line.quantity }} × {{ line.unit_price }}</p></div>
+            <p class="shrink-0 font-semibold text-slate-900">{{ line.total }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+        <span class="font-semibold text-slate-700">{% trans "Total à payer" %}</span>
+        <span class="text-xl font-black text-emerald-800">{{ order.total_amount }}</span>
+      </div>
+    </section>
+
+    <section class="card-dashboard p-5 sm:p-7" aria-labelledby="payment-method-heading">
+      <h2 id="payment-method-heading" class="text-lg font-bold text-slate-900">{% trans "Moyen de paiement" %}</h2>
+      <form method="post" class="mt-5 space-y-5">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div role="alert" class="rounded-xl bg-red-50 p-3 text-sm text-red-700">{{ form.non_field_errors }}</div>{% endif %}
+        <fieldset class="space-y-3">
+          <legend class="sr-only">{% trans "Choisir le moyen de paiement" %}</legend>
+          {% for radio in form.method %}
+            <label class="flex cursor-pointer gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-emerald-400 hover:bg-emerald-50/40 has-checked:border-emerald-600 has-checked:bg-emerald-50">
+              {{ radio.tag }}
+              <span class="text-sm font-semibold text-slate-800">{{ radio.choice_label }}</span>
+            </label>
+          {% endfor %}
+          {{ form.method.errors }}
+        </fieldset>
+        <div id="mobile-provider-field" class="space-y-2">
+          <label for="{{ form.mobile_provider.id_for_label }}" class="text-sm font-semibold text-slate-700">{{ form.mobile_provider.label }}</label>
+          {{ form.mobile_provider }}
+          {% if form.mobile_provider.errors %}<p class="text-sm text-red-700">{{ form.mobile_provider.errors|join:", " }}</p>{% endif %}
+          <p class="text-xs leading-5 text-amber-800">{% trans "L'intégration Mobile Money n'est pas encore connectée. Cette option crée une intention en attente seulement : aucun paiement ni transfert bancaire n'est envoyé." %}</p>
+        </div>
+        <button type="submit" class="btn-primary w-full"><i class="fa-solid fa-lock" aria-hidden="true"></i>{% trans "Continuer vers le paiement" %}</button>
+        <a href="{% url 'orders:detail' order.pk %}" class="btn-secondary w-full">{% trans "Retour à la commande" %}</a>
+      </form>
+    </section>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const field = document.getElementById('mobile-provider-field');
+    const update = () => {
+      const selected = document.querySelector('input[name="method"]:checked');
+      field.hidden = !selected || selected.value !== 'mobile_money';
+    };
+    document.querySelectorAll('input[name="method"]').forEach((input) => input.addEventListener('change', update));
+    update();
+  });
+</script>
+{% endblock %}

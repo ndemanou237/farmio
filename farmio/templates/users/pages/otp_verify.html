@@ -1,0 +1,504 @@
+
+{% extends "users/base.html" %}
+{% load i18n static %}
+
+{% block title %}
+  {% trans "Vérification du compte" %} — Farmio
+{% endblock %}
+
+
+{% block users_content %}
+
+<div
+  class="min-h-[calc(100vh-80px)]
+         flex items-center justify-center
+         px-4 py-10"
+>
+
+  <div class="w-full max-w-md">
+
+    <!-- Carte -->
+    <div
+      class="bg-white
+             rounded-2xl
+             shadow-lg
+             border border-gray-100
+             px-6 py-8
+             sm:px-8"
+    >
+
+      <!-- En-tête -->
+      <div class="text-center mb-8">
+
+        <div
+          class="inline-flex
+                 items-center
+                 justify-center
+                 w-14 h-14
+                 rounded-2xl
+                 bg-green-100
+                 text-green-700
+                 mb-4"
+        >
+
+          <svg
+            class="w-7 h-7"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8
+                 M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5
+                 a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+
+        </div>
+
+
+        <h1
+          class="text-3xl
+                 font-bold
+                 text-gray-900"
+        >
+          {% trans "Vérifiez votre email" %}
+        </h1>
+
+
+        <p
+          class="text-gray-500
+                 mt-3
+                 text-sm"
+        >
+          {% trans "Entrez le code à 6 chiffres envoyé à" %}
+        </p>
+
+
+        <p
+          class="font-semibold
+                 text-gray-900
+                 mt-1
+                 break-all"
+        >
+          {{ email }}
+        </p>
+
+      </div>
+
+
+      <!-- Formulaire OTP -->
+      <form
+        method="post"
+        action=""
+        id="otp-form"
+        novalidate
+      >
+
+        {% csrf_token %}
+
+
+        <!-- Contrôleur OTP -->
+        <div
+          id="otp-controller"
+          data-controller="otp-input"
+          class="flex flex-col items-center"
+        >
+
+          <!-- Six cases -->
+          <div
+            class="flex
+                   justify-center
+                   gap-2
+                   sm:gap-3"
+            role="group"
+            aria-label="{% trans 'Code de vérification' %}"
+          >
+
+            <!-- 1 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="0"
+              aria-label="{% trans 'Premier chiffre' %}"
+            >
+
+            <!-- 2 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="1"
+              aria-label="{% trans 'Deuxième chiffre' %}"
+            >
+
+            <!-- 3 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="2"
+              aria-label="{% trans 'Troisième chiffre' %}"
+            >
+
+            <!-- 4 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="3"
+              aria-label="{% trans 'Quatrième chiffre' %}"
+            >
+
+            <!-- 5 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="4"
+              aria-label="{% trans 'Cinquième chiffre' %}"
+            >
+
+            <!-- 6 -->
+            <input
+              type="text"
+              class="otp-digit
+                     w-11 h-13
+                     sm:w-12 sm:h-14
+                     text-center
+                     text-xl
+                     font-bold
+                     text-gray-900
+                     bg-gray-50
+                     border-2
+                     border-gray-200
+                     rounded-xl
+                     outline-none
+                     transition-all
+                     duration-200
+                     focus:border-green-600
+                     focus:bg-white
+                     focus:ring-2
+                     focus:ring-green-100"
+              inputmode="numeric"
+              maxlength="1"
+              autocomplete="off"
+              data-otp-index="5"
+              aria-label="{% trans 'Sixième chiffre' %}"
+            >
+
+          </div>
+
+
+          <!--
+            CHAMP DJANGO RÉEL
+
+            C'est ce champ que Django reçoit.
+            Le JavaScript le remplit automatiquement.
+          -->
+          {{ form.code.as_hidden }}
+
+
+          <!-- Erreurs Django -->
+          {% if form.code.errors %}
+
+            <div
+              class="mt-4
+                     text-center"
+              role="alert"
+            >
+
+              {% for error in form.code.errors %}
+
+                <p
+                  class="text-sm
+                         text-red-600"
+                >
+                  {{ error }}
+                </p>
+
+              {% endfor %}
+
+            </div>
+
+          {% endif %}
+
+        </div>
+
+
+        <!-- Bouton de vérification -->
+        <button
+          type="submit"
+          class="w-full
+                 mt-7
+                 flex
+                 items-center
+                 justify-center
+                 gap-2
+                 bg-green-700
+                 hover:bg-green-800
+                 text-white
+                 font-semibold
+                 py-3
+                 cursor-pointer
+                 rounded-xl
+                 shadow-sm
+                 hover:shadow-md
+                 transition-all
+                 duration-200
+                 focus:outline-none
+                 focus:ring-2
+                 focus:ring-green-500
+                 focus:ring-offset-2"
+        >
+
+          <span>
+            {% trans "Vérifier le code" %}
+          </span>
+
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+
+        </button>
+
+      </form>
+
+
+      <!-- Séparateur -->
+      <div
+        class="flex
+               items-center
+               gap-4
+               my-7"
+      >
+
+        <div class="flex-1 h-px bg-gray-200"></div>
+
+        <span
+          class="text-xs
+                 text-gray-400
+                 uppercase
+                 whitespace-nowrap"
+        >
+          {% trans "Code non reçu ?" %}
+        </span>
+
+        <div class="flex-1 h-px bg-gray-200"></div>
+
+      </div>
+
+
+      <!-- Renvoi OTP -->
+      <form
+        method="post"
+        action="{% url 'users:otp-resend' %}"
+        class="text-center"
+      >
+
+        {% csrf_token %}
+
+        <button
+          type="submit"
+          id="resend-btn"
+          data-controller="otp-resend"
+          data-cooldown="{{ resend_cooldown }}"
+          class="text-sm
+                 font-semibold
+                 text-green-700
+                 hover:text-green-800
+                 hover:underline
+                 disabled:text-gray-400
+                 disabled:no-underline
+                 transition
+                 cursor-pointer
+                 disabled:cursor-not-allowed"
+          {% if resend_cooldown > 0 %}
+            disabled
+          {% endif %}
+        >
+
+          {% trans "Renvoyer le code" %}
+
+          <span
+            data-role="cooldown-label"
+          ></span>
+
+        </button>
+
+      </form>
+
+
+      <!-- Information -->
+      <div
+        class="mt-6
+               flex
+               items-center
+               justify-center
+               gap-2
+               text-xs
+               text-gray-400"
+      >
+
+        <svg
+          class="w-4 h-4 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01
+               M12 20a8 8 0 100-16 8 8 0 000 16z"
+          />
+        </svg>
+
+        <span>
+          {% trans "Le code est valable pendant quelques minutes." %}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- Texte sous la carte -->
+    <p
+      class="text-center
+             text-xs
+             text-gray-400
+             mt-5"
+    >
+      {% trans "Sécurisez votre compte Farmio." %}
+    </p>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+  type="module"
+  src="{% static 'js/users/otp-input.js' %}"
+></script>
+
+{% endblock %}
+

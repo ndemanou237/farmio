@@ -1,0 +1,17 @@
+{% extends "common/base.html" %}
+
+{# Layout spécifique au domaine "users" : centre le contenu des pages d'auth. #}
+
+{% block content %}
+<div class="min-h-[70vh]">
+  {% block users_content %}{% endblock %}
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+  {{ block.super }}
+
+  {% block users_extra_js %}
+  {% endblock %}
+{% endblock %}

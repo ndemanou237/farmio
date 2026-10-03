@@ -1,0 +1,24 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Producteurs en attente" %} — Farmio{% endblock %}
+{% block dashboard_content %}
+<div class="max-w-4xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-bold mb-6">{% trans "Producteurs en attente d'approbation" %}</h1>
+  {% if pending_producers %}
+  <div class="space-y-3">
+    {% for profile in pending_producers %}
+    <div class="flex items-center justify-between bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+      <div>
+        <p class="font-medium">{{ profile.company_name }}</p>
+        <p class="text-sm text-gray-500">{{ profile.user.name }} · {{ profile.user.email }}</p>
+        <p class="text-xs text-gray-400">{{ profile.user.location }}</p>
+      </div>
+      <a href="{% url 'users:producer-review-detail' profile.pk %}" class="text-sm font-medium text-green-700 hover:underline">{% trans "Examiner" %}</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-gray-500">{% trans "Aucun producteur en attente pour le moment." %}</p>
+  {% endif %}
+</div>
+{% endblock %}

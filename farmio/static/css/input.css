@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@source "../../templates/**/*.html";
+@source "../../**/templates/**/*.html";
+
+@font-face {
+    font-family: "Inter";
+    src: url("/static/fonts/inter/Inter_18pt-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/static/fonts/inter/Inter_18pt-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/static/fonts/inter/Inter_18pt-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/static/fonts/inter/Inter_18pt-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-inter: "Inter", sans-serif;
+
+    --color-green-700: #166534;
+    --color-green-800: #14532d;
+}
+
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: "Inter", sans-serif;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-800;
+    }
+
+    .btn-accent {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-emerald-600 hover:to-green-700;
+    }
+
+    .card-dashboard {
+        @apply rounded-3xl border border-slate-200 bg-white shadow-sm;
+    }
+
+    .input-field {
+        @apply w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600;
+    }
+
+    .nav-link {
+        @apply text-gray-600 transition hover:text-green-700;
+    }
+
+    .message-container {
+        @apply mx-auto max-w-2xl space-y-2 px-4 pt-4;
+    }
+
+    .message {
+        @apply rounded-lg border px-4 py-3 text-sm;
+    }
+}

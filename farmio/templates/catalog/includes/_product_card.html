@@ -1,0 +1,63 @@
+{% load i18n %}
+<article class="group flex h-full flex-col overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl">
+  <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+    <a href="{{ product.get_absolute_url }}" aria-label="{% trans 'Voir le détail de' %} {{ product.name }}" class="block h-full">
+      {% if product.main_image %}
+        <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+      {% else %}
+        <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-100 text-4xl text-slate-300">🌾</div>
+      {% endif %}
+    </a>
+
+    <span class="absolute right-3 top-3 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold shadow-sm ring-1 ring-white/60
+      {% if product.status == 'AVAILABLE' %} bg-emerald-600 text-white
+      {% elif product.status == 'OUT_OF_STOCK' %} bg-amber-500 text-white
+      {% elif product.status == 'UNAVAILABLE' %} bg-slate-600 text-white
+      {% else %} bg-slate-500 text-white
+      {% endif %}">
+      {{ product.get_status_display }}
+    </span>
+  </div>
+
+  <div class="flex flex-1 flex-col space-y-3 p-4">
+    <div class="flex items-center justify-between gap-2">
+      <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-700">{{ product.category.name }}</span>
+      <span class="text-[10px] font-medium text-slate-500">{{ product.quantity }} {{ product.get_unit_display }}</span>
+    </div>
+
+    <h3 class="line-clamp-2 text-base font-bold text-slate-900"><a href="{{ product.get_absolute_url }}" class="hover:text-emerald-700">{{ product.name }}</a></h3>
+
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <span class="text-lg font-extrabold text-slate-900">{{ product.price }}</span>
+        <span class="ml-1 text-xs text-slate-500">/{{ product.get_unit_display }}</span>
+      </div>
+      <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700">{% trans "Direct" %}</span>
+    </div>
+
+    <div class="flex items-center gap-2 text-[11px] text-slate-500">
+      <i class="fa-solid fa-location-dot text-emerald-600"></i>
+      <span>{{ product.producer.location.city|default:product.producer.location.region|default:"Localisation" }}</span>
+    </div>
+
+    <div class="flex items-center justify-between border-t border-slate-100 pt-3">
+      <span class="text-[11px] text-slate-500">
+        {% trans "par" %} {{ product.producer.producer_profile.company_name|default:product.producer.get_short_name }}
+      </span>
+      {% if product.status == 'AVAILABLE' and user.is_authenticated and user.is_buyer and user != product.producer %}
+        <form method="post" action="{% url 'cart:add' %}" class="shrink-0">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300" aria-label="{% trans 'Ajouter au panier' %} {{ product.name }}">
+            <i class="fa-solid fa-cart-plus"></i>
+            {% trans "Ajouter" %}
+          </button>
+        </form>
+      {% else %}
+        <a href="{{ product.get_absolute_url }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700">{% trans "Voir" %} <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+      {% endif %}
+    </div>
+  </div>
+</article>

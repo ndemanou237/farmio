@@ -1,0 +1,20 @@
+{% load i18n %}
+
+{% if field %}
+<div class="mb-4">
+  <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+    {{ field.label }}{% if field.field.required %} <span class="text-red-500">*</span>{% endif %}
+  </label>
+  {{ field }}
+  {% if field.help_text %}
+    <p class="text-xs text-gray-400 mt-1">{{ field.help_text }}</p>
+  {% endif %}
+  {% for error in field.errors %}
+    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+  {% endfor %}
+</div>
+{% else %}
+<div class="mb-4 rounded-lg bg-red-50 border border-red-300 text-red-700 text-xs px-3 py-2">
+  ⚠️ Champ de formulaire introuvable — vérifie le nom passé dans le {% templatetag openblock %} include {% templatetag closeblock %} de cette page.
+</div>
+{% endif %}

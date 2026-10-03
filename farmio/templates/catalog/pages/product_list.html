@@ -1,0 +1,98 @@
+{% extends "catalog/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Catalogue" %} — Farmio{% endblock %}
+
+{% block catalog_content %}
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Farmio</p>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{% trans "Catalogue des produits" %}</h1>
+      </div>
+
+      <form method="get" action="{% url 'catalog:product-list' %}" class="w-full max-w-4xl">
+        <div class="grid gap-3 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+            <input
+              type="search"
+              name="q"
+              value="{{ selected_q }}"
+              placeholder="{% trans 'Recherche textuelle' %}"
+              class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            >
+          </div>
+
+          <select name="category" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+            <option value="">{% trans "Catégorie" %}</option>
+            {% for category in categories %}
+              <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+
+          <select name="region" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+            <option value="">{% trans "Région" %}</option>
+            {% for region in regions %}
+              <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>{{ region }}</option>
+            {% endfor %}
+          </select>
+
+          <input type="number" min="0" name="min_price" value="{{ selected_min_price }}" placeholder="{% trans 'Min' %}" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100" />
+
+          <input type="number" min="0" name="max_price" value="{{ selected_max_price }}" placeholder="{% trans 'Max' %}" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100" />
+        </div>
+
+        <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <select name="availability" class="max-w-xs rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100">
+            <option value="">{% trans "Disponibilité" %}</option>
+            <option value="AVAILABLE" {% if selected_availability == 'AVAILABLE' %}selected{% endif %}>{% trans "Disponible" %}</option>
+            <option value="OUT_OF_STOCK" {% if selected_availability == 'OUT_OF_STOCK' %}selected{% endif %}>{% trans "Épuisé" %}</option>
+            <option value="UNAVAILABLE" {% if selected_availability == 'UNAVAILABLE' %}selected{% endif %}>{% trans "Indisponible" %}</option>
+          </select>
+
+          <div class="flex items-center gap-2">
+            <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+              <i class="fa-solid fa-filter text-xs"></i>
+              {% trans "Filtrer" %}
+            </button>
+            {% if active_filters %}
+              <a href="{% url 'catalog:product-list' %}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-100">
+                {% trans "Réinitialiser" %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if products %}
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      {% for product in products %}
+        {% include "catalog/includes/_product_card.html" %}
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <div class="mt-8 flex items-center justify-center gap-2 text-sm">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="inline-flex items-center rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700">{% trans "Précédent" %}</a>
+        {% endif %}
+        <span class="rounded-xl bg-slate-100 px-3 py-2 font-medium text-slate-600">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="inline-flex items-center rounded-xl border border-slate-200 bg-white px-3 py-2 font-medium text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700">{% trans "Suivant" %}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center shadow-sm">
+      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-emerald-600">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <h2 class="text-lg font-semibold text-slate-800">{% trans "Aucun produit ne correspond à votre recherche." %}</h2>
+      <p class="mt-2 text-sm text-slate-500">{% trans "Essayez une autre combinaison de critères pour trouver des produits disponibles." %}</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

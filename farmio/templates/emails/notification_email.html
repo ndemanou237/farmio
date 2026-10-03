@@ -1,0 +1,13 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:32px 16px;background:#f7f9f5;font-family:Arial,sans-serif;color:#1f2937">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden">
+      <tr><td style="padding:22px;background:#166534;color:#fff;font-size:22px;font-weight:bold">{{ site_name|default:"Farmio" }}</td></tr>
+      <tr><td style="padding:28px"><p>{% blocktrans with name=full_name %}Bonjour {{ name }},{% endblocktrans %}</p><h1 style="font-size:20px;color:#14532d">{{ title }}</h1><p style="line-height:1.6">{{ message }}</p>{% if notification_url %}<p><a href="{{ notification_url }}" style="color:#166534">{% trans "Voir les détails" %}</a></p>{% endif %}<p style="margin-top:28px;color:#6b7280;font-size:12px">{% trans "Vous recevez ce message car vous utilisez Farmio." %}</p></td></tr>
+    </table>
+  </td></tr></table>
+</body>
+</html>
