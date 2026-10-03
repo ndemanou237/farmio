@@ -1,0 +1,9 @@
+<div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm text-rose-700">
+  <div class="flex items-start gap-3">
+    <span class="mt-0.5 text-lg"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></span>
+    <div>
+      <p class="font-semibold">{{ title|default:'Une erreur est survenue' }}</p>
+      <p class="mt-1 text-rose-600">{{ message|default:'Veuillez réessayer plus tard.' }}</p>
+    </div>
+  </div>
+</div>

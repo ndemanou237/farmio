@@ -4,188 +4,62 @@
 {% block title %}{% trans "Créer un compte" %} — Farmio{% endblock %}
 
 {% block users_content %}
+<div class="flex min-h-[70vh] items-center justify-center px-4 py-10">
+  <div class="w-full max-w-3xl">
+    <div class="card-surface border-slate-200 px-6 py-8 sm:px-8">
+      <div class="mb-8 text-center">
+        <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl shadow-sm">
+          <span aria-hidden="true">🌱</span>
+        </div>
 
-<div class="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 py-10">
+        <h1 class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+          {% trans "Rejoindre Farmio" %}
+        </h1>
 
-  <div class="w-full max-w-2xl">
+        <p class="mt-2 text-sm text-slate-500">
+          {% trans "Choisissez le type de compte qui correspond à votre usage." %}
+        </p>
+      </div>
 
+      <div class="grid gap-4 sm:grid-cols-2">
+        <a href="{% url 'users:signup-producer' %}" class="feature-card group p-6">
+          <div class="flex items-center justify-between">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl text-emerald-700">🌾</span>
+            <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:text-emerald-700"></i>
+          </div>
 
-<!-- Carte principale -->
-<div class="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-8 sm:px-8">
+          <h2 class="mt-5 text-xl font-bold text-slate-900">{% trans "Je suis Producteur" %}</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600">{% trans "Publiez vos produits, gérez votre activité et recevez des demandes de qualité." %}</p>
+        </a>
 
-  <!-- En-tête -->
-  <div class="text-center mb-8">
+        <a href="{% url 'users:signup-buyer' %}" class="feature-card group p-6">
+          <div class="flex items-center justify-between">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl text-emerald-700">🛒</span>
+            <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:text-emerald-700"></i>
+          </div>
 
-    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-green-100 mb-4">
-      <span class="text-2xl">🌱</span>
+          <h2 class="mt-5 text-xl font-bold text-slate-900">{% trans "Je suis Acheteur" %}</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600">{% trans "Trouvez des fournisseurs fiables et commandez en toute simplicité." %}</p>
+        </a>
+      </div>
+
+      <div class="my-7 flex items-center gap-4">
+        <div class="h-px flex-1 bg-slate-200"></div>
+        <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">{% trans "ou" %}</span>
+        <div class="h-px flex-1 bg-slate-200"></div>
+      </div>
+
+      <p class="text-center text-sm text-slate-500">
+        {% trans "Déjà inscrit ?" %}
+        <a href="{% url 'users:login' %}" class="font-semibold text-emerald-700 transition hover:text-emerald-800 hover:underline">
+          {% trans "Connectez-vous" %}
+        </a>
+      </p>
     </div>
 
-    <h1 class="text-3xl font-bold text-gray-900">
-      {% trans "Rejoindre Farmio" %}
-    </h1>
-
-    <p class="text-gray-500 mt-2 text-sm">
-      {% trans "Choisissez le type de compte que vous souhaitez créer." %}
+    <p class="mt-5 text-center text-xs text-slate-400">
+      {% trans "Rejoignez la communauté Farmio et développez vos échanges agricoles." %}
     </p>
-
   </div>
-
-
-  <!-- Choix du compte -->
-  <div class="grid sm:grid-cols-2 gap-4">
-
-    <!-- Producteur -->
-    <a
-      href="{% url 'users:signup-producer' %}"
-      class="group relative border border-gray-200 rounded-xl p-6
-             hover:border-green-500 hover:bg-green-50/50
-             hover:shadow-md
-             transition-all duration-200"
-    >
-
-      <div class="flex items-center justify-between mb-5">
-
-        <span
-          class="inline-flex items-center justify-center
-                 w-12 h-12 rounded-xl
-                 bg-green-100 text-green-700
-                 group-hover:bg-green-200
-                 transition"
-        >
-          <span class="text-2xl">🌾</span>
-        </span>
-
-        <svg
-          class="w-5 h-5 text-gray-300
-                 group-hover:text-green-600
-                 group-hover:translate-x-1
-                 transition-all"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 7l5 5m0 0l-5 5m5-5H6"
-          />
-        </svg>
-
-      </div>
-
-      <h2
-        class="text-lg font-semibold text-gray-900
-               group-hover:text-green-700 transition"
-      >
-        {% trans "Je suis Producteur" %}
-      </h2>
-
-      <p class="text-sm text-gray-500 mt-2 leading-relaxed">
-        {% trans "Publiez vos produits et recevez des réservations." %}
-      </p>
-
-    </a>
-
-
-    <!-- Acheteur -->
-    <a
-      href="{% url 'users:signup-buyer' %}"
-      class="group relative border border-gray-200 rounded-xl p-6
-             hover:border-green-500 hover:bg-green-50/50
-             hover:shadow-md
-             transition-all duration-200"
-    >
-
-      <div class="flex items-center justify-between mb-5">
-
-        <span
-          class="inline-flex items-center justify-center
-                 w-12 h-12 rounded-xl
-                 bg-green-100 text-green-700
-                 group-hover:bg-green-200
-                 transition"
-        >
-          <span class="text-2xl">🛒</span>
-        </span>
-
-        <svg
-          class="w-5 h-5 text-gray-300
-                 group-hover:text-green-600
-                 group-hover:translate-x-1
-                 transition-all"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 7l5 5m0 0l-5 5m5-5H6"
-          />
-        </svg>
-
-      </div>
-
-      <h2
-        class="text-lg font-semibold text-gray-900
-               group-hover:text-green-700 transition"
-      >
-        {% trans "Je suis Acheteur" %}
-      </h2>
-
-      <p class="text-sm text-gray-500 mt-2 leading-relaxed">
-        {% trans "Trouvez des producteurs fiables et réservez vos produits." %}
-      </p>
-
-    </a>
-
-  </div>
-
-
-  <!-- Séparation -->
-  <div class="flex items-center gap-4 my-8">
-
-    <div class="flex-1 h-px bg-gray-200"></div>
-
-    <span class="text-xs text-gray-400 uppercase">
-      {% trans "ou" %}
-    </span>
-
-    <div class="flex-1 h-px bg-gray-200"></div>
-
-  </div>
-
-
-  <!-- Connexion -->
-  <p class="text-sm text-gray-500 text-center">
-
-    {% trans "Déjà inscrit ?" %}
-
-    <a
-      href="{% url 'users:login' %}"
-      class="text-green-700 font-semibold
-             hover:text-green-800
-             hover:underline
-             transition"
-    >
-      {% trans "Connectez-vous" %}
-    </a>
-
-  </p>
-
 </div>
-
-
-<!-- Texte sous la carte -->
-<p class="text-center text-xs text-gray-400 mt-5">
-  {% trans "Rejoignez la communauté Farmio." %}
-</p>
-
-
-  </div>
-
-</div>
-
 {% endblock %}

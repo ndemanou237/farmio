@@ -6,15 +6,15 @@
   <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
       <p class="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Farmio · {% trans "Administration" %}</p>
-      <h1 class="mt-2 text-3xl font-bold text-[#14532d]">{% trans "Modération des avis" %}</h1>
+      <h1 class="mt-2 text-3xl font-black text-emerald-900">{% trans "Modération des avis" %}</h1>
       <p class="mt-2 text-sm text-slate-600">{% trans "Les avis ne sont publiés qu'après approbation." %}</p>
     </div>
     <form method="get" class="flex items-center gap-2">
-      <label for="review-status" class="text-sm font-medium">{% trans "Statut" %}</label>
-      <select id="review-status" name="status" class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+      <label for="review-status" class="text-sm font-medium text-slate-700">{% trans "Statut" %}</label>
+      <select id="review-status" name="status" class="input-field py-2.5">
         {% for value, label in status_choices %}<option value="{{ value }}" {% if value == selected_status %}selected{% endif %}>{{ label }}</option>{% endfor %}
       </select>
-      <button class="rounded-xl bg-[#166534] px-4 py-2 text-sm font-semibold text-white hover:bg-[#14532d]">{% trans "Filtrer" %}</button>
+      <button class="btn-primary px-4 py-2.5">{% trans "Filtrer" %}</button>
     </form>
   </header>
 
@@ -30,11 +30,11 @@
               <td class="max-w-sm px-4 py-4"><p class="font-bold text-amber-600" aria-label="{% blocktrans with rating=review.rating %}Note : {{ rating }} sur 5{% endblocktrans %}">{% for _ in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</p><p class="mt-1 whitespace-pre-wrap text-slate-700">{{ review.comment|default:_('Aucun commentaire') }}</p><p class="mt-2 text-xs text-slate-500">{{ review.created_at|date:"d/m/Y H:i" }}</p></td>
               <td class="px-4 py-4"><p class="font-medium text-slate-900">{{ review.order.reference }}</p><p class="text-slate-600">{{ review.buyer.get_short_name }}</p></td>
               <td class="px-4 py-4">{{ review.producer.get_short_name }}</td>
-              <td class="px-4 py-4">{{ review.moderation.get_status_display|default:_('En attente') }}</td>
+              <td class="px-4 py-4"><span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">{{ review.moderation.get_status_display|default:_('En attente') }}</span></td>
               <td class="min-w-48 px-4 py-4">
                 <div class="flex flex-wrap gap-2">
                   {% for decision, label in action_labels %}
-                    <form method="post" action="{% url 'reviews:moderate' review.pk %}">{% csrf_token %}<button name="decision" value="{{ decision }}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-800">{{ label }}</button></form>
+                    <form method="post" action="{% url 'reviews:moderate' review.pk %}">{% csrf_token %}<button name="decision" value="{{ decision }}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-emerald-500 hover:text-emerald-800">{{ label }}</button></form>
                   {% endfor %}
                 </div>
               </td>
