@@ -10,6 +10,7 @@ urlpatterns = [
     path("<uuid:pk>/", views.OrderDetailView.as_view(), name="detail"),
     path("<uuid:pk>/confirm/", views.OrderConfirmView.as_view(), name="confirm"),
     path("<uuid:pk>/refuse/", views.OrderRefuseView.as_view(), name="refuse"),
+    path("<uuid:pk>/start/", views.OrderStartView.as_view(), name="start"),
     path(
         "<uuid:pk>/confirm-receipt/",
         views.OrderReceiptConfirmView.as_view(),

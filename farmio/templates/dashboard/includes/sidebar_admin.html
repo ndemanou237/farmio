@@ -19,6 +19,11 @@
   <span>{% trans "Producteurs" %}</span>
 </a>
 
+<a href="{% url 'reviews:moderation-list' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
+  <i class="fa-solid fa-star text-sm w-4 text-center"></i>
+  <span>{% trans "Modération des avis" %}</span>
+</a>
+
 <a href="{% url 'catalog:product-list' %}" class="group mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white">
   <i class="fa-solid fa-store text-sm w-4 text-center"></i>
   <span>{% trans "Catalogue" %}</span>

@@ -5,6 +5,8 @@ from __future__ import annotations
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
+from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -20,6 +22,8 @@ from django.views.generic import ListView
 from django.views.generic import UpdateView
 
 from farmio.catalog.permissions import ProductOwnerMixin
+from farmio.reviews.models import Review
+from farmio.reviews.models import ReviewModerationStatus
 from farmio.users.permissions import ApprovedProducerRequiredMixin
 from farmio.utils.enums import ProductStatus
 
@@ -127,6 +131,23 @@ class ProductDetailView(DetailView):
         return Product.objects.select_related("producer", "category").prefetch_related(
             "images",
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        approved_reviews = Review.objects.filter(
+            producer=self.object.producer,
+            is_deleted=False,
+            moderation__status=ReviewModerationStatus.APPROVED,
+        )
+        context["producer_review_summary"] = approved_reviews.aggregate(
+            average=Avg("rating"),
+            total=Count("pk"),
+        )
+        context["producer_reviews"] = approved_reviews.select_related(
+            "buyer",
+            "order",
+        )[:5]
+        return context
 
 
 # ==============================================================================

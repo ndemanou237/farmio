@@ -116,6 +116,7 @@ LOCAL_APPS = [
     "farmio.payments.apps.PaymentsConfig",
     "farmio.notifications.apps.NotificationsConfig",
     "farmio.messaging.apps.MessagingConfig",
+    "farmio.reviews.apps.ReviewsConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

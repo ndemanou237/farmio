@@ -54,3 +54,46 @@ class Review(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.rating}/5 — {self.producer} par {self.buyer}"
+
+
+class ReviewModerationStatus(models.TextChoices):
+    PENDING = "pending", _("En attente")
+    APPROVED = "approved", _("Approuvé")
+    REJECTED = "rejected", _("Rejeté")
+    HIDDEN = "hidden", _("Masqué")
+
+
+class ReviewModeration(BaseModel):
+    """Persistent moderation metadata kept separate from the existing Review schema."""
+
+    review = models.OneToOneField(
+        Review,
+        on_delete=models.CASCADE,
+        related_name="moderation",
+        verbose_name=_("avis"),
+    )
+    status = models.CharField(
+        _("statut de modération"),
+        max_length=12,
+        choices=ReviewModerationStatus.choices,
+        default=ReviewModerationStatus.PENDING,
+        db_index=True,
+    )
+    moderated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="moderated_reviews",
+        verbose_name=_("modéré par"),
+    )
+    moderated_at = models.DateTimeField(_("date de modération"), null=True, blank=True)
+    moderation_note = models.TextField(_("note de modération"), blank=True)
+
+    class Meta:
+        verbose_name = _("modération d'avis")
+        verbose_name_plural = _("modérations d'avis")
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.review_id} — {self.get_status_display()}"

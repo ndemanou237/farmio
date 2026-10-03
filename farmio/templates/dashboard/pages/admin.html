@@ -10,7 +10,7 @@
     <p class="mt-2 text-sm text-slate-500">{% trans "Vue d'ensemble de l'activité Farmio." %}</p>
   </div>
 
-  <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+  <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
     <a href="{% url 'users:producer-review-list' %}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_10px_24px_rgba(148,163,184,0.08)] transition hover:border-blue-200 hover:shadow-md">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium text-slate-500">{% trans "Producteurs en attente" %}</span>
@@ -46,7 +46,60 @@
         <p class="text-3xl font-extrabold tracking-tight text-slate-900">{{ orders_today_count }}</p>
       </div>
     </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <span class="text-xs font-medium text-slate-500">{% trans "Acheteurs actifs" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ buyers_count }}</p>
+    </div>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <span class="text-xs font-medium text-slate-500">{% trans "Producteurs actifs" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ producers_count }}</p>
+    </div>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <span class="text-xs font-medium text-slate-500">{% trans "Commandes" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ orders_count }}</p>
+      <p class="mt-1 text-xs text-slate-500">{{ completed_orders_count }} {% trans "terminées" %}</p>
+    </div>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <span class="text-xs font-medium text-slate-500">{% trans "Produits au catalogue" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-slate-900">{{ products_count }}</p>
+    </div>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <span class="text-xs font-medium text-slate-500">{% trans "Note moyenne approuvée" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-amber-600">{% if reviews_average %}{{ reviews_average|floatformat:1 }} ★{% else %}—{% endif %}</p>
+    </div>
+    <a href="{% url 'reviews:moderation-list' %}" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm transition hover:border-emerald-400">
+      <span class="text-xs font-medium text-emerald-900">{% trans "Avis en attente" %}</span>
+      <p class="mt-5 text-3xl font-extrabold text-emerald-800">{{ reviews_pending_count }}</p>
+      <p class="mt-1 text-xs text-emerald-800">{{ reviews_count }} {% trans "avis approuvés" %}</p>
+    </a>
   </div>
+
+  <section class="grid gap-5 xl:grid-cols-2">
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="font-bold text-slate-900">{% trans "Commandes par mois" %}</h2>
+      <div class="mt-4 h-64"><canvas id="orders-chart" role="img" aria-label="{% trans 'Commandes créées par mois' %}"></canvas></div>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="font-bold text-slate-900">{% trans "Répartition des notes" %}</h2>
+      <div class="mt-4 h-64"><canvas id="ratings-chart" role="img" aria-label="{% trans 'Nombre d’avis par note' %}"></canvas></div>
+    </div>
+  </section>
+
+  <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div><h2 class="font-bold text-slate-900">{% trans "Paiements confirmés" %}</h2><p class="text-xs text-slate-500">{% trans "Les montants sont présentés séparément par devise." %}</p></div>
+      <div class="flex flex-wrap gap-2">
+        <a href="{% url 'dashboard:report-pdf' %}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">{% trans "Télécharger le PDF" %}</a>
+        <a href="{% url 'dashboard:report-excel' %}" class="rounded-xl bg-[#166534] px-4 py-2 text-sm font-semibold text-white hover:bg-[#14532d]">{% trans "Exporter Excel" %}</a>
+      </div>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="min-w-full text-left text-sm"><thead><tr class="border-b text-xs uppercase text-slate-500"><th class="py-2 pr-4">{% trans "Devise" %}</th><th class="py-2 pr-4">{% trans "Montant" %}</th><th class="py-2">{% trans "Transactions" %}</th></tr></thead>
+        <tbody>{% for revenue in revenue_by_currency %}<tr class="border-b border-slate-100"><td class="py-2 pr-4 font-semibold">{{ revenue.amount_currency }}</td><td class="py-2 pr-4">{{ revenue.total|default:0 }}</td><td class="py-2">{{ revenue.payments }}</td></tr>{% empty %}<tr><td colspan="3" class="py-4 text-slate-500">{% trans "Aucun paiement confirmé." %}</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </section>
 
   <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_24px_rgba(148,163,184,0.08)]">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -61,4 +114,22 @@
     </div>
   </div>
 </div>
+{{ chart_data|json_script:"farmio-admin-chart-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+<script>
+  (() => {
+    const data = JSON.parse(document.getElementById('farmio-admin-chart-data').textContent);
+    if (!window.Chart) return;
+    new Chart(document.getElementById('orders-chart'), {
+      type: 'bar',
+      data: { labels: data.orders.labels, datasets: [{ label: '{% trans "Commandes" %}', data: data.orders.values, backgroundColor: '#166534' }] },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+    new Chart(document.getElementById('ratings-chart'), {
+      type: 'bar',
+      data: { labels: data.ratings.labels.map((rating) => `${rating} ★`), datasets: [{ label: '{% trans "Avis approuvés" %}', data: data.ratings.values, backgroundColor: '#d97706' }] },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+  })();
+</script>
 {% endblock %}

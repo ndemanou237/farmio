@@ -38,6 +38,7 @@ urlpatterns += i18n_patterns(
     path("cart/", include("farmio.cart.urls", namespace="cart")),
     path("orders/", include("farmio.orders.urls", namespace="orders")),
     path("payments/", include("farmio.payments.urls", namespace="payments")),
+    path("reviews/", include("farmio.reviews.urls", namespace="reviews")),
     path(
         "notifications/",
         include("farmio.notifications.urls", namespace="notifications"),

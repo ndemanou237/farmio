@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -12,11 +13,14 @@ from django.views import View
 from django.views.generic import DetailView
 from django.views.generic import ListView
 
+from farmio.catalog.models import Product
 from farmio.notifications.services import create_notification
 from farmio.orders.models import Order
 from farmio.orders.services import CartValidationError
 from farmio.orders.services import CartValidationService
 from farmio.payments.models import PaymentTransaction
+from farmio.reviews.forms import ReviewForm
+from farmio.reviews.models import Review
 from farmio.users.permissions import ApprovedProducerRequiredMixin
 from farmio.users.permissions import BuyerRequiredMixin
 from farmio.utils.enums import OrderStatus
@@ -74,6 +78,25 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
             )
         self.object = order
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["can_start_order"] = (
+            self.request.user.pk == self.object.producer_id
+            and self.object.status == OrderStatus.CONFIRMED
+            and PaymentTransaction.objects.filter(
+                order=self.object,
+                status="success",
+                transaction_type="charge",
+            ).exists()
+        )
+        if self.request.user.pk == self.object.buyer_id:
+            context["existing_review"] = Review.objects.filter(
+                order=self.object,
+                buyer=self.request.user,
+            ).select_related("moderation").first()
+            context["review_form"] = ReviewForm()
+        return context
 
 
 class ValidateCartOrderView(LoginRequiredMixin, BuyerRequiredMixin, View):
@@ -166,8 +189,6 @@ class OrderRefuseView(LoginRequiredMixin, ApprovedProducerRequiredMixin, View):
                 messages.error(request, _("Cette commande n'est plus en attente."))
                 return redirect("orders:detail", pk=order.pk)
             for line in order.lines.select_related("product").order_by("product_id"):
-                from farmio.catalog.models import Product
-
                 product = Product.objects.select_for_update().get(pk=line.product_id)
                 product.quantity = product.quantity + line.quantity
                 product.updated_by = request.user
@@ -184,6 +205,53 @@ class OrderRefuseView(LoginRequiredMixin, ApprovedProducerRequiredMixin, View):
                 email_subject=_("Mise à jour de votre commande Farmio"),
             )
         messages.success(request, _("Commande refusée."))
+        return redirect("orders:detail", pk=order.pk)
+
+
+class OrderStartView(LoginRequiredMixin, ApprovedProducerRequiredMixin, View):
+    """Mark a confirmed, paid order as in progress for its producer."""
+
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            try:
+                order = Order.objects.select_for_update().select_related("buyer").get(
+                    pk=self.kwargs["pk"],
+                    is_deleted=False,
+                )
+            except Order.DoesNotExist as exc:
+                raise Http404 from exc
+            if order.producer_id != request.user.pk:
+                raise PermissionDenied(
+                    _("Vous ne pouvez traiter que vos propres commandes."),
+                )
+            if order.status != OrderStatus.CONFIRMED:
+                messages.error(
+                    request,
+                    _("Cette commande ne peut pas passer en préparation."),
+                )
+                return redirect("orders:detail", pk=order.pk)
+            is_paid = PaymentTransaction.objects.filter(
+                order=order,
+                status="success",
+                transaction_type="charge",
+            ).exists()
+            if not is_paid:
+                messages.error(
+                    request,
+                    _("Le paiement confirmé est requis avant la préparation."),
+                )
+                return redirect("orders:detail", pk=order.pk)
+            order.status = OrderStatus.IN_PROGRESS
+            order.updated_by = request.user
+            order.save(update_fields=["status", "updated_by", "updated_at"])
+            create_notification(
+                order.buyer,
+                _("Commande en préparation"),
+                _("La commande %(reference)s est en cours de préparation.")
+                % {"reference": order.reference},
+                email_subject=_("Mise à jour de votre commande Farmio"),
+            )
+        messages.success(request, _("La commande est maintenant en préparation."))
         return redirect("orders:detail", pk=order.pk)
 
 
