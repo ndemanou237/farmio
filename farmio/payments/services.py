@@ -281,6 +281,7 @@ def process_stripe_event(event: Any) -> bool:
     if session is None:
         return False
     metadata = getattr(session, "metadata", {}) or {}
+    metadata = metadata.to_dict() if hasattr(metadata, "to_dict") else metadata
     payment_id = metadata.get("payment_transaction_id")
     if not payment_id:
         return False
