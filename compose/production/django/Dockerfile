@@ -45,6 +45,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  # WeasyPrint PDF rendering dependencies
+  libpango-1.0-0 \
+  libpangoft2-1.0-0 \
+  libharfbuzz-subset0 \
   # entrypoint
   wait-for-it \
   # cleaning up unused files

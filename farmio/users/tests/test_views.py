@@ -74,7 +74,8 @@ class TestUserUpdateView:
         form.instance = user
         view.form_valid(form)
 
-        assert messages_sent == ["Informations mises à jour."]
+        stored_messages = [str(message) for message in messages.get_messages(request)]
+        assert stored_messages == ["Informations mises à jour."]
 
 
 class TestUserRedirectView:

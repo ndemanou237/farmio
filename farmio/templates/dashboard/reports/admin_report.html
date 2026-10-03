@@ -1,0 +1,59 @@
+{% load i18n %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{% trans "Rapport administratif Farmio" %}</title>
+  <style>
+    @page { size: A4; margin: 18mm 15mm; @bottom-right { content: "Farmio · " counter(page) "/" counter(pages); color: #64748b; font-size: 9pt; } }
+    body { color: #1f2937; font: 10pt sans-serif; }
+    h1, h2 { color: #14532d; }
+    h1 { border-bottom: 3px solid #166534; padding-bottom: 8px; }
+    .meta { color: #64748b; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .card { border: 1px solid #d1d5db; border-radius: 8px; padding: 10px; }
+    .value { color: #166534; font-size: 18pt; font-weight: bold; }
+    table { border-collapse: collapse; margin-top: 12px; width: 100%; }
+    th { background: #166534; color: white; text-align: left; }
+    th, td { border: 1px solid #d1d5db; padding: 7px; }
+    tr { page-break-inside: avoid; }
+  </style>
+</head>
+<body>
+  <h1>{% trans "Rapport administratif Farmio" %}</h1>
+  <p class="meta">{% trans "Généré le" %} {{ report.generated_at|date:"d/m/Y H:i" }}</p>
+  <section class="cards">
+    <div class="card">{% trans "Utilisateurs actifs" %}<div class="value">{{ report.users_count }}</div></div>
+    <div class="card">{% trans "Acheteurs actifs" %}<div class="value">{{ report.buyers_count }}</div></div>
+    <div class="card">{% trans "Producteurs actifs" %}<div class="value">{{ report.producers_count }}</div></div>
+    <div class="card">{% trans "Produits" %}<div class="value">{{ report.products_count }}</div></div>
+    <div class="card">{% trans "Commandes" %}<div class="value">{{ report.orders_count }}</div></div>
+    <div class="card">{% trans "Commandes terminées" %}<div class="value">{{ report.completed_orders_count }}</div></div>
+    <div class="card">{% trans "Avis approuvés" %}<div class="value">{{ report.reviews_count }}</div></div>
+    <div class="card">{% trans "Avis en attente" %}<div class="value">{{ report.reviews_pending_count }}</div></div>
+    <div class="card">{% trans "Note moyenne" %}<div class="value">{{ report.reviews_average|default:"—" }}</div></div>
+  </section>
+  <h2>{% trans "Paiements réussis par devise" %}</h2>
+  <table>
+    <thead><tr><th>{% trans "Devise" %}</th><th>{% trans "Montant" %}</th><th>{% trans "Nombre de paiements" %}</th></tr></thead>
+    <tbody>
+      {% for revenue in report.revenue_by_currency %}
+        <tr><td>{{ revenue.amount_currency }}</td><td>{{ revenue.total }}</td><td>{{ revenue.payments }}</td></tr>
+      {% empty %}
+        <tr><td colspan="3">{% trans "Aucun paiement confirmé." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>{% trans "Commandes récemment créées" %}</h2>
+  <table>
+    <thead><tr><th>{% trans "Référence" %}</th><th>{% trans "Statut" %}</th><th>{% trans "Montant" %}</th><th>{% trans "Date" %}</th></tr></thead>
+    <tbody>
+      {% for order in report.recent_orders %}
+        <tr><td>{{ order.reference }}</td><td>{{ order.get_status_display }}</td><td>{{ order.total_amount }}</td><td>{{ order.created_at|date:"d/m/Y" }}</td></tr>
+      {% empty %}
+        <tr><td colspan="4">{% trans "Aucune commande." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

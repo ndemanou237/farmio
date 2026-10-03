@@ -74,12 +74,12 @@ urlpatterns = [
         name="producer-review-list",
     ),
     path(
-        "admin/producers/<int:pk>/",
+        "admin/producers/<uuid:pk>/",
         views.ProducerReviewDetailView.as_view(),
         name="producer-review-detail",
     ),
     path(
-        "admin/producers/<int:pk>/suspend/",
+        "admin/producers/<uuid:pk>/suspend/",
         views.ProducerSuspendView.as_view(),
         name="producer-suspend",
     ),

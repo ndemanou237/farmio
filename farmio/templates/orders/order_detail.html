@@ -62,11 +62,51 @@
           </form>
         </div>
       {% endif %}
+      {% if can_start_order %}
+        <form method="post" action="{% url 'orders:start' order.pk %}" class="mt-3">
+          {% csrf_token %}
+          <button type="submit" class="btn-primary w-full"><i class="fa-solid fa-box-open" aria-hidden="true"></i>{% trans "Commencer la préparation" %}</button>
+        </form>
+      {% endif %}
       {% if request.user == order.buyer and order.status == 'IN_PROGRESS' %}
         <form method="post" action="{% url 'orders:confirm-receipt' order.pk %}" class="mt-3">
           {% csrf_token %}
           <button type="submit" class="btn-primary w-full"><i class="fa-solid fa-check" aria-hidden="true"></i>{% trans "Confirmer la réception" %}</button>
         </form>
+      {% endif %}
+      {% if request.user == order.buyer and order.status == 'COMPLETED' %}
+        <section class="mt-6 border-t border-slate-100 pt-5" aria-labelledby="review-heading">
+          <h2 id="review-heading" class="text-lg font-bold text-slate-900">{% trans "Votre avis sur le producteur" %}</h2>
+          {% if existing_review %}
+            <p class="mt-2 text-sm text-slate-600">{% trans "Votre note" %} : <span class="font-bold text-amber-600">{{ existing_review.rating }} ★ / 5</span></p>
+            {% if existing_review.comment %}<p class="mt-2 whitespace-pre-line text-sm text-slate-600">{{ existing_review.comment }}</p>{% endif %}
+            <p class="mt-2 text-xs text-slate-500">{% trans "Statut" %} : {{ existing_review.moderation.get_status_display|default:_('En attente de modération') }}</p>
+          {% else %}
+            <p class="mt-1 text-sm text-slate-500">{% trans "Seules les commandes terminées peuvent être notées. L’avis sera publié après modération." %}</p>
+            <form method="post" action="{% url 'reviews:submit' order.pk %}" class="mt-4 space-y-4">
+              {% csrf_token %}
+              <fieldset>
+                <legend class="mb-2 text-sm font-semibold text-slate-700">{{ review_form.rating.label }}</legend>
+                <div class="flex flex-wrap gap-2">
+                  {% for radio in review_form.rating %}
+                    <label for="{{ radio.id_for_label }}" class="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm hover:border-emerald-500 has-checked:border-emerald-700 has-checked:bg-emerald-50">
+                      {{ radio.tag }}
+                      <span aria-hidden="true">{% for star in "12345" %}{% if forloop.counter <= forloop.parentloop.counter %}★{% else %}☆{% endif %}{% endfor %}</span>
+                      <span class="sr-only">{{ radio.choice_label }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+                {% if review_form.rating.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ review_form.rating.errors|join:", " }}</p>{% endif %}
+              </fieldset>
+              <div>
+                <label for="{{ review_form.comment.id_for_label }}" class="mb-1 block text-sm font-semibold text-slate-700">{{ review_form.comment.label }}</label>
+                {{ review_form.comment }}
+                {% if review_form.comment.errors %}<p class="mt-1 text-sm text-red-700" role="alert">{{ review_form.comment.errors|join:", " }}</p>{% endif %}
+              </div>
+              <button type="submit" class="btn-primary w-full">{% trans "Envoyer mon avis" %}</button>
+            </form>
+          {% endif %}
+        </section>
       {% endif %}
     </aside>
   </div>
